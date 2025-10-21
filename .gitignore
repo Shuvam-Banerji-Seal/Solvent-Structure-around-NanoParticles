@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.uv/
+
+# LAMMPS and generated data
+data/*.lammpstrj
+data/*.dcd
+data/*.pdb
+data/*.data
+data/*.lammpstrj
+experiments/
+outputs/
+log.lammps
+*.log
+
+# PACKMOL
+packmol-21.1.1/
+packmol-21.1.1.tar.gz
+packmol/
+
+# VMD
+.vmd_history
+
+# Editors
+*~
+*.swp
+.DS_Store
+
+# OS
+Thumbs.db
+*.tmp
+
+# Large data files
+*.tar.gz
+*.zip
+*.7z
+
+# Cache directories
+.cache/
+.pytest_cache/
+.mypy_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

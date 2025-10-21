@@ -1,0 +1,43 @@
+# Central experiment parameters
+# Units: distances in Angstrom (A), energies in kcal/mol (LAMMPS 'real')
+
+water_model: TIP4P/2005
+# A small quick-test model can be set to SPC/E in test_water_model
+test_water_model: SPC/E
+
+lammps_units: real
+
+solute:
+  type: lj_sphere
+  sigma_A: 3.4       # approximate LJ sigma for solute single-site
+  radius_A: 3.0
+
+# epsilon sweep (kcal/mol) for solute-water interaction (solute-O)
+epsilon_sweep_kcalmol: [0.02, 0.05, 0.1, 0.2, 0.5, 1.0]
+
+# Box geometry
+box:
+  length_A: 60.0
+
+# Water properties (used when generating number of waters)
+water:
+  model: TIP4P/2005
+  target_density_g_cm3: 0.997
+  molar_mass_g_mol: 18.015
+  d_OM_A: 0.15    # distance to place TIP4P M-site from O along bisector (default, verify for chosen model)
+
+runtime:
+  n_replicas: 3
+  threads_cpu: 16
+  gpus_per_replica: 1
+  lmp_bin: lmp_mpi
+
+simulation:
+  timestep_fs: 2.0
+  equilibration_ns: 1.0
+  production_ns: 10.0
+  write_traj_ps: 2.0
+
+analysis:
+  rdf_bins: 200
+  rdf_rmax_A: 30.0

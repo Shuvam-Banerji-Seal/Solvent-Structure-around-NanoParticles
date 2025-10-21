@@ -1,0 +1,19 @@
+# PACKMOL input template to solvate a single solute PDB with waters
+# Replace placeholders: {SOLUTE_PDB}, {WATER_PDB}, {N_WATERS}, {BOX}
+
+tolerance 2.0
+filetype pdb
+output {OUTPUT_PDB}
+
+structure {SOLUTE_PDB}
+  number 1
+  inside box 0. 0. 0. {BOX} {BOX} {BOX}
+end structure
+
+structure {WATER_PDB}
+  number {N_WATERS}
+  inside box 0. 0. 0. {BOX} {BOX} {BOX}
+  # optionally, exclude waters inside a sphere around solute center
+  # inside sphere 0. 0. 0 {EXCLUDE_RADIUS}
+end structure
+

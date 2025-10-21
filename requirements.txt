@@ -1,0 +1,12 @@
+# Python dependencies for solvent structure analysis
+# Install with: uv pip install -r requirements.txt
+
+pyyaml>=6.0
+numpy>=1.21.0
+matplotlib>=3.5.0
+pathlib2>=2.3.0  # For Python < 3.4 compatibility
+
+# Optional scientific packages (install as needed)
+# MDAnalysis>=2.0.0
+# mdtraj>=1.9.0
+# parmed>=3.4.0

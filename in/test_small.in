@@ -1,0 +1,39 @@
+# Small smoke-test input: simple LJ fluid test
+units real
+atom_style atomic
+boundary p p p
+
+region box block 0 60 0 60 0 60
+create_box 2 box
+
+# Create lattice-based atoms
+lattice fcc 4.0
+create_atoms 2 box
+
+# Change one atom to type 1 (solute) - just pick atom ID 1
+set atom 1 type 1
+
+mass 1 12.0
+mass 2 16.0
+
+pair_style lj/cut 10.0
+pair_coeff 1 1 0.5 3.4
+pair_coeff 2 2 0.15 3.16
+pair_coeff 1 2 0.05 3.3
+
+group SOLUTE type 1
+group OXYGEN type 2
+
+# Minimize first
+minimize 1.0e-4 1.0e-6 100 1000
+
+# Initialize velocities
+velocity all create 300.0 12345 dist gaussian
+
+fix 1 all nvt temp 300.0 300.0 100.0
+
+compute rdf_sol SOLUTE rdf 200 1 2
+fix rdfave all ave/time 100 1 100 c_rdf_sol[*] file data/rdf_test_small.dat mode vector
+
+thermo 100
+run 500
