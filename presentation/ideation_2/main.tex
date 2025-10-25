@@ -1,0 +1,1205 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage[authoryear]{natbib}
+\usepackage{booktabs}
+\bibliographystyle{plainnat}
+
+\title{Solvation Structure Around Nanoparticles}
+\subtitle{Integrating MD Simulations and Machine Learning}
+\author{Shuvam Banerji Seal (22MS076)}
+\institute{}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Why the Initial Problem Statement is Too General}
+
+\begin{frame}{The Starting Problem Statement}
+\begin{block}{Initial Question}
+``How does solvation structure change around a hydrophobic vs. hydrophilic nanoparticle?''
+\end{block}
+
+\pause
+
+\begin{alertblock}{Why This is Too General}
+This is an excellent entry point, but in cutting-edge research, it's considered general because it oversimplifies a complex phenomenon.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Three Key Limitations}
+\begin{enumerate}
+\item \textbf{Implies a Simple Binary}
+\begin{itemize}
+\item Frames ``hydrophobic'' and ``hydrophilic'' as two distinct, opposite categories
+\item Literature shows it's a complex spectrum
+\item The ``hydrophilicity'' of a metal surface $\neq$ hydroxylated oxide surface
+\end{itemize}
+
+\pause
+
+\item \textbf{Neglects Morphology and Topology}
+\begin{itemize}
+\item Assumes only variable is surface chemistry
+\item Shape, size, curvature (convex vs. concave), porosity dominate interaction
+\item Sometimes more important than intrinsic chemistry
+\end{itemize}
+
+\pause
+
+\item \textbf{Leaves ``Solvation Structure'' Undefined}
+\begin{itemize}
+\item Could mean: density, orientation, H-bond lifetime, residence time, etc.
+\item Must define \emph{which aspects} are investigated
+\item Must specify \emph{which metrics} will quantify them
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{The Path Forward}
+\begin{block}{Requirement}
+Build a more sophisticated problem statement that incorporates the nuances revealed by the literature.
+\end{block}
+
+\vspace{0.5cm}
+
+We will extract specific, subtle findings from each paper to construct a more advanced research problem.
+\end{frame}
+
+\section{Synthesizing Nuances from the Literature}
+
+\subsection{Nuance 1: Hydrophobic Interface Ordering}
+
+\begin{frame}{Nuance 1: The Hydrophobic Interface is Not Empty}
+\begin{block}{Conventional View vs. Reality}
+\begin{itemize}
+\item \textbf{Conventional:} Hydrophobic surface simply repels water
+\item \textbf{Reality:} Water reorganizes to preserve H-bond network
+\item Results in structures more ordered than bulk liquid
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Key Finding: \citet{Srivastava2024}}
+\textit{``in smaller CNTs, water molecules adopt an icy structure near tube walls while maintaining liquid state towards the center.''}
+\end{exampleblock}
+
+\pause
+
+\begin{alertblock}{Paradigm Shift}
+\begin{itemize}
+\item Reframes hydrophobic interface from zone of \emph{depletion}
+\item To zone of \emph{ice-like ordering}
+\item Key metric: \textbf{Tetrahedral order parameter}
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\subsection{Nuance 2: Morphology and Confinement}
+
+\begin{frame}{Nuance 2: Nanoparticle Morphology Creates Unique Environments}
+\begin{block}{Beyond Chemistry}
+\begin{itemize}
+\item Chemical nature is not the only factor
+\item \textbf{Shape} dictates how solvent molecules can arrange
+\item Concave surfaces (pores, cages) behave fundamentally differently from convex ones
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Key Finding: \citet{Gotzias2022}}
+\textit{``cyclohexane molecules remain attached on the concave surface of the nanotube or the nanocone without being disturbed by the water molecules entering the cavity.''}
+\end{exampleblock}
+
+\pause
+
+\begin{alertblock}{Implication}
+\begin{itemize}
+\item Interior of porous nanoparticle maintains hydrophobic environment
+\item Even when particle is immersed in water
+\item Driven by free energy
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\subsection{Nuance 3: Tunable Interaction Spectrum}
+
+\begin{frame}{Nuance 3: A Tunable Spectrum, Not Fixed Property}
+\begin{block}{Key Concept}
+\begin{itemize}
+\item ``Hydrophobic'' and ``hydrophilic'' are endpoints of continuous spectrum
+\item This spectrum is called \textbf{wettability}
+\item Molecular-level interaction has direct consequences for macroscopic phenomena
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{\citet{Chen2014}}
+\small
+\textit{``The interfacial thermal conductance is influenced by the selection of different water models and the interfacial wettability.''}
+
+\vspace{0.2cm}
+$\Rightarrow$ Links wettability to thermal properties
+\end{exampleblock}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{\citet{Jorabchi2023}}
+\small
+\textit{``the nanoalloys have less solvation energy in water than the other solvents. This is why the nanoalloys tend to approach more in this solvent''}
+
+\vspace{0.2cm}
+$\Rightarrow$ Links solvation energy to aggregation
+\end{exampleblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+\subsection{Nuance 4: Accurate Models}
+
+\begin{frame}{Nuance 4: Accurate Models Are Prerequisites}
+\begin{block}{Foundational Requirement}
+\begin{itemize}
+\item Choice of potential function is not trivial
+\item It is \textbf{foundational} to simulation accuracy
+\item Applies to both solvent and solute
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{Water: \citet{Rick2004}}
+\small
+\textit{``The new model demonstrates a density maximum near 4°C, like the TIP5P model, and otherwise is similar to the TIP5P model for thermodynamic, dielectric, and dynamical properties of liquid water...''}
+
+\vspace{0.2cm}
+$\Rightarrow$ High-fidelity model needed
+\end{exampleblock}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{Nanoparticle: \citet{Fronzi2023}}
+\small
+\textit{``it is only for clusters with more than 30 atoms that interior gold atoms become present.''}
+
+\vspace{0.2cm}
+$\Rightarrow$ Surface-to-volume ratio critical
+\end{exampleblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{The Properly Defined Research Problem}
+
+\begin{frame}{The Refined Research Problem (1/2)}
+\begin{block}{Overarching Goal}
+This research will conduct a systematic investigation into the \textbf{molecular-level determinants} of nanoparticle solvation in water, deconstructing ``hydrophobicity'' and ``hydrophilicity'' into a quantitative framework based on the \textbf{interplay of}:
+\begin{itemize}
+\item Surface chemistry
+\item Morphology
+\item Spatial confinement
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{Grounded In}
+Grounded in the understanding that the hydrophobic interface can induce significant ordering \citep{Srivastava2024}, and that nanoparticle morphology creates distinct local solvation environments \citep{Gotzias2022}, this study will employ high-fidelity potentials for both water \citep{Rick2004} and nanoparticles \citep{Fronzi2023,Fomin2022} to address the following core questions.
+\end{block}
+\end{frame}
+
+\begin{frame}{The Refined Research Problem (2/2)}
+\begin{block}{Core Questions}
+\begin{enumerate}
+\item How do quantitative structural metrics, specifically \textbf{tetrahedral order parameters}, differentiate ``ice-like'' ordering at non-polar carbon from layered, but more mobile, structure at metallic Ag/Au?
+
+\item To what extent does nanoparticle morphology control solvation? Specifically, how does water structure in \textbf{concave carbon nanotube} differ from \textbf{convex fullerene}, and how does this correlate with free energy of transfer?
+
+\item How does continuous spectrum of \textbf{interfacial wettability} \citep{Chen2014} translate to changes in first solvation shell dynamics (H-bond lifetimes, residence times)?
+
+\item How do structural/dynamic signatures correlate with:
+\begin{itemize}
+\item Thermodynamic drivers for aggregation \citep{Jorabchi2023}
+\item Interfacial heat transfer efficiency
+\end{itemize}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Elevation of the Project}
+\begin{alertblock}{Key Achievement}
+This framing elevates the project from a \textbf{simple comparison} to a \textbf{deep, mechanistic study} of the fundamental physics governing the nanoparticle-water interface.
+\end{alertblock}
+\end{frame}
+
+\section{Integrating Machine Learning and AI}
+
+\begin{frame}{Why Integrate ML/AI?}
+\begin{block}{The Traditional Approach}
+Simply correlating simulation results with macroscopic properties is valid but limited.
+\end{block}
+
+\pause
+
+\begin{exampleblock}{The ML Advantage}
+Using ML opens a more novel and powerful way to:
+\begin{itemize}
+\item Analyze simulation data
+\item Leverage expensive computational results
+\item Make predictions without running new simulations
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\subsection{Core ML Concept}
+
+\begin{frame}{The Core Idea: ML Learns the Physics}
+\begin{block}{The Computational Challenge}
+\begin{itemize}
+\item MD simulations are computationally expensive
+\item Single 50 ns simulation for one $\varepsilon$ value can take days
+\item Want hydration number for new $\varepsilon$? $\Rightarrow$ Another multi-day simulation
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{The ML Solution}
+\begin{itemize}
+\item Use expensive data points to \textbf{train a machine learning model}
+\item Model learns relationship between nanoparticle properties and solvation structure
+\item ML model becomes a \textbf{``surrogate model''}
+\item Highly efficient, data-driven approximation of expensive MD
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\subsection{ML Workflow}
+
+\begin{frame}{Step 1: Data Generation}
+\begin{block}{What You're Already Doing!}
+Perform MD simulations for carefully chosen input parameters.
+\end{block}
+
+\pause
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Inputs (Features):}
+\begin{itemize}
+\item $\varepsilon$ (LJ interaction strength)
+\end{itemize}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\textbf{Outputs (Labels):}
+\begin{itemize}
+\item Hydration Number
+\item RDF First Peak Height
+\item RDF First Peak Position
+\end{itemize}
+\end{column}
+\end{columns}
+
+\pause
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Example Values}
+Run simulations for $\varepsilon \in [0.02, 0.05, 0.1, 0.2, 0.5, 1.0]$ kcal/mol
+
+Each with 3 replicas for statistics
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Example Dataset Structure}
+\begin{table}
+\centering
+\small
+\begin{tabular}{ccccc}
+\toprule
+$\varepsilon$ & Replica & Hydration & RDF Peak & RDF Peak \\
+(kcal/mol) & & Number & Height & Position (Å) \\
+\midrule
+0.02 & 1 & 3.1 & 1.8 & 3.4 \\
+0.02 & 2 & 3.3 & 1.9 & 3.4 \\
+0.02 & 3 & 3.2 & 1.8 & 3.5 \\
+0.05 & 1 & 4.5 & 2.5 & 3.6 \\
+... & ... & ... & ... & ... \\
+1.00 & 3 & 12.5 & 5.1 & 3.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+Average replicas for each $\varepsilon$ to get final training dataset
+\end{frame}
+
+\begin{frame}{Step 2: Training the ML Surrogate Model}
+\begin{block}{Model Setup}
+Train a regression model to predict output properties from input features.
+\begin{itemize}
+\item \textbf{Model Input (X):} $\varepsilon$ values
+\item \textbf{Model Output (Y):} Hydration number, RDF peak height, etc.
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Model Options (using Scikit-learn)}
+\begin{enumerate}
+\item \textbf{Random Forest Regressor:} Robust for small datasets, less prone to overfitting
+\item \textbf{Gradient Boosting (XGBoost/LightGBM):} State-of-the-art on tabular data
+\item \textbf{Gaussian Process Regressor:} Provides prediction + uncertainty estimate
+\item \textbf{Simple Neural Network:} For ``AI'' flavor (Keras/TensorFlow, 2 hidden layers, 32 neurons each)
+\end{enumerate}
+\end{exampleblock}
+
+\pause
+
+Split data: Train on subset, test on held-out values
+\end{frame}
+
+\begin{frame}{Step 3: Prediction and Validation}
+\begin{block}{The ``Aha!'' Moment}
+\begin{enumerate}
+\item \textbf{Predict:} Choose $\varepsilon$ not in training data (e.g., $\varepsilon = 0.1$)
+
+\item \textbf{ML Prediction:} Model gives instant answer:
+\begin{center}
+\textit{``For $\varepsilon = 0.1$, hydration number = \textbf{6.8 $\pm$ 0.2}''}
+\end{center}
+
+\item \textbf{Validate:} Run actual MD simulation for $\varepsilon = 0.1$ (takes days)
+\begin{center}
+True answer: \textbf{6.9}
+\end{center}
+
+\item \textbf{Success!} ML predicted complex physical simulation in \textbf{seconds}, saving days of compute time
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Reframing the Research Problem}
+\begin{block}{Updated Problem Statement}
+\small
+``How does solvation structure change around a hydrophobic vs. hydrophilic nanoparticle? This research will address this by:
+\begin{enumerate}
+\item Generating high-fidelity molecular dynamics data for a range of nanoparticle interaction strengths ($\varepsilon$)
+\item Using this data to train a machine learning surrogate model capable of instantly and accurately predicting key structural metrics
+\end{enumerate}
+
+\textbf{Ultimate goal:} Create a predictive framework that replaces expensive first-principles simulation with rapid, data-driven model, enabling efficient exploration of the hydrophobic-to-hydrophilic transition.''
+\end{block}
+\end{frame}
+
+\subsection{Advanced ML Implementations}
+
+\begin{frame}{Advanced ML: Predicting Entire RDF Curve}
+\begin{block}{Beyond Scalar Properties}
+\textbf{Challenge:} Instead of predicting single number (peak height), predict entire function
+
+\textbf{How:} Train neural network where:
+\begin{itemize}
+\item Input: $\varepsilon$ (single value)
+\item Output: Vector of 200 numbers representing $g(r)$ at each point $r$
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Impact}
+\begin{itemize}
+\item More complex but far more powerful
+\item Captures complete structural information
+\item Enables detailed analysis without running MD
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Advanced ML: Unsupervised Discovery of Water States}
+\begin{block}{Approach}
+\begin{enumerate}
+\item Extract thousands of snapshots of water molecules in first solvation shell
+\item For each water molecule, create feature vector:
+\begin{itemize}
+\item Distance from surface
+\item Tetrahedral order parameter $S_q$
+\item Orientation of dipole
+\end{itemize}
+\item Apply clustering algorithm (DBSCAN or k-Means) on this dataset
+\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Discovery}
+Algorithm automatically discovers distinct ``states'' of interfacial water:
+\begin{itemize}
+\item ``Ice-like''
+\item ``Bulk-like''
+\item ``Disordered''
+\end{itemize}
+Without being told what to look for!
+
+Analyze how population of these clusters changes with $\varepsilon$
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Advanced ML: Generative AI for Solvation Shells}
+\begin{block}{State-of-the-Art Approach}
+\textbf{How:} Train generative model (VAE or diffusion model) on simulation snapshots
+
+\textbf{Goal:} Given $\varepsilon$ value, model \emph{generates} 3D configuration of most probable water structure around nanoparticle
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Revolutionary Impact}
+\begin{itemize}
+\item Creates ``snapshot'' without running simulation at all
+\item Transforms project from \emph{descriptive} to \emph{generative}
+\item Opens door to rapid exploration of parameter space
+\end{itemize}
+\end{exampleblock}
+
+\pause
+
+\begin{alertblock}{Paradigm Shift}
+By integrating ML, you transform project from one that \textbf{describes} a phenomenon to one that \textbf{predicts} it.
+\end{alertblock}
+\end{frame}
+
+\section{Clear Goal and Total Refined Research Problem}
+
+\begin{frame}{The Clear Goal of the Whole Study}
+\begin{block}{Overarching Goal}
+Develop a \textbf{predictive, data-driven framework} for understanding and modeling the molecular structure of water at nanoparticle interfaces.
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Beyond Traditional Simulations}
+\begin{itemize}
+\item Move beyond descriptive one-off simulations
+\item Use high-fidelity MD as ``ground truth''
+\item Train suite of machine learning models
+\item Deliverable: Computationally inexpensive \textbf{``MD-ML surrogate''}
+\item Can instantly predict complex, multi-scale solvation structure
+\item Autonomously discover fundamental physical states of interfacial water
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Total Refined Research Problem (1/3)}
+\begin{block}{Fundamental Question}
+How does water structure itself at the interface of hydrophobic and hydrophilic nanoparticles?
+\end{block}
+
+\pause
+
+\begin{block}{Central Hypothesis}
+The traditional hydrophobic/hydrophilic dichotomy is an \textbf{insufficient descriptor}. True solvation structure arises from complex interplay of:
+\begin{itemize}
+\item Surface chemistry
+\item Nanoparticle morphology
+\item Spatial confinement
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Total Refined Research Problem (2/3)}
+\begin{block}{Methodology: Hybrid MD-ML Approach}
+\textbf{Foundational Dataset:}
+\begin{itemize}
+\item High-fidelity MD simulations
+\item Spherical LJ solutes with systematically varied $\varepsilon$
+\item Using structurally accurate TIP5P-EW water model
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Data Usage:}
+\begin{itemize}
+\item Not merely for descriptive analysis
+\item Train and validate hierarchy of ML models
+\item Models designed to \emph{learn the underlying physics of solvation}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Total Refined Research Problem (3/3)}
+\begin{block}{Specific Components}
+\begin{enumerate}
+\item Develop \textbf{deep learning regressor} to predict entire RDF as continuous function of $\varepsilon$
+
+\item Employ \textbf{unsupervised clustering} on molecular-level features (including tetrahedral order) to autonomously identify distinct states of interfacial water
+
+\item (Future) Explore \textbf{generative AI models} to construct realistic 3D solvation shell configurations from input parameters
+\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Scientific Questions to Answer}
+\begin{itemize}
+\item Nature of interfacial ordering
+\item Dominant role of nanoparticle morphology
+\item Dynamics of first solvation shell
+\item Thermodynamic drivers of aggregation and heat transfer
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\section{Specific Aims: The Actionable Plan}
+
+\begin{frame}{Overview of Three Aims}
+\begin{enumerate}
+\item \textbf{Aim 1:} Establish ``Ground Truth'' Dataset via High-Fidelity MD
+
+\item \textbf{Aim 2:} Develop Predictive ML Surrogate Model for Rapid Structural Prediction
+
+\item \textbf{Aim 3:} Discover Latent Solvation States using Unsupervised Learning
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Aim 1: Ground Truth Dataset}
+\begin{block}{Action}
+Perform core MD simulations:
+\begin{itemize}
+\item Series of runs with spherical LJ solutes in TIP5P-EW water
+\item Sweep $\varepsilon$ parameter from highly hydrophobic to highly hydrophilic
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{Output}
+For each simulation:
+\begin{itemize}
+\item Full RDF curves
+\item Hydration numbers
+\item Trajectories with detailed molecular information:
+\begin{itemize}
+\item Positions
+\item Orientations
+\item Tetrahedral order parameters for every water molecule near interface
+\end{itemize}
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{alertblock}{Purpose}
+This dataset is the foundational input for Aims 2 and 3
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Aim 2: Predictive ML Surrogate Model}
+\begin{block}{Action}
+Use dataset from Aim 1 to train neural network:
+\begin{itemize}
+\item \textbf{Input:} Nanoparticle's $\varepsilon$ value
+\item \textbf{Output:} Predicted 200-point vector representing entire $g(r)$ curve
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{Validation}
+Model validated by ability to accurately predict RDF for $\varepsilon$ values held out from training set
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Goal}
+Create a tool that can generate physically accurate RDF in \textbf{seconds}, bypassing need for multi-day MD simulation
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Aim 3: Discover Latent Solvation States}
+\begin{block}{Action}
+\begin{enumerate}
+\item From trajectories (Aim 1), extract thousands of snapshots of individual water molecules in first solvation shell
+
+\item For each molecule, create feature vector:
+\begin{itemize}
+\item Distance from surface
+\item $S_q$ value (tetrahedral order)
+\item Number of hydrogen bonds
+\end{itemize}
+
+\item Apply clustering algorithm (k-Means or DBSCAN) to high-dimensional dataset
+\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Goal}
+Allow machine to autonomously discover fundamental ``states'' of interfacial water:
+\begin{itemize}
+\item Provides data-driven answer to what ``ice-like'' vs. ``disordered'' vs. ``bulk-like'' truly means
+\item Quantify population of these states as function of $\varepsilon$
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Powerful Narrative}
+\begin{block}{Why This Structure Works}
+\begin{itemize}
+\item \textbf{MD simulations} provide essential physical accuracy
+\item \textbf{ML models} provide novel predictive power
+\item \textbf{Deep analytical insight} not possible with simulation-only study
+\item Enables tackling core scientific questions in fundamentally new way
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Impact}
+Transforms computational chemistry from expensive black-box calculations to intelligent, data-driven prediction
+\end{exampleblock}
+\end{frame}
+
+\section{Implementation Details: The Complete Pipeline}
+
+\begin{frame}{High-Level Pipeline Overview}
+\begin{enumerate}
+\item \textbf{Phase 0:} Configuration \& Setup
+\begin{itemize}
+\item Define all parameters
+\item Set up environment
+\end{itemize}
+
+\item \textbf{Phase 1:} System Generation (One-time)
+\begin{itemize}
+\item Create initial configuration
+\item Convert to LAMMPS format
+\end{itemize}
+
+\item \textbf{Phase 2:} Simulation Workflow (Automated)
+\begin{itemize}
+\item Generate input files for all $\varepsilon$ values
+\item Run simulations
+\end{itemize}
+
+\item \textbf{Phase 3:} Analysis
+\begin{itemize}
+\item Process RDF data
+\item Calculate coordination numbers
+\item Train ML models
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+\subsection{Phase 0: Configuration}
+
+\begin{frame}{Phase 0.1: Environment Setup}
+\begin{block}{Required Software}
+\begin{enumerate}
+\item \textbf{LAMMPS:} Compiled with MOLECULE and KSPACE packages for TIP5P support
+\item \textbf{PACKMOL:} For generating initial configurations
+\item \textbf{VMD:} For file format conversions
+\item \textbf{Python environment:} With scientific computing libraries
+\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Python Setup}
+\texttt{bash scripts/setup\_python\_env.sh}
+
+\texttt{source .venv/bin/activate}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Phase 0.2: Master Configuration File}
+\begin{block}{\texttt{configs/params.yaml}}
+Single source of truth for all parameters:
+\begin{itemize}
+\item Water model: TIP5P-EW (5-site, Ewald-optimized)
+\item Solute: LJ sphere with varied $\varepsilon$
+\item $\varepsilon$ sweep: [0.02, 0.05, 0.1, 0.2, 0.5, 1.0] kcal/mol
+\item Box size: 60 Å cubic
+\item Number of replicas: 3 per $\varepsilon$
+\item Equilibration: 5 ns
+\item Production: 50 ns
+\item Timestep: 2.0 fs
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Phase 0.3: LAMMPS Input Template}
+\begin{block}{\texttt{in/cg\_sphere.in.template}}
+Template handles TIP5P-EW correctly:
+\begin{itemize}
+\item \texttt{pair\_style lj/cut/tip4p/long}
+\item Proper treatment of rigid water molecules
+\item Immobilized solute at origin
+\item Three stages:
+\begin{enumerate}
+\item Energy minimization
+\item NPT equilibration (300K, 1 atm)
+\item NVT production run
+\end{enumerate}
+\item RDF computation during production
+\item Trajectory output for analysis
+\end{itemize}
+\end{block}
+\end{frame}
+
+\subsection{Phase 1: System Generation}
+
+\begin{frame}[allowframebreaks]{Phase 1: One-Time System Building}
+\begin{block}{Step 1.1: Generate PACKMOL Input}
+\texttt{python3 tools/packmol\_wrapper.py}
+
+Calculates $\sim$7200 water molecules needed for 60Å box
+\end{block}
+
+\pause
+
+\begin{block}{Step 1.2: Run PACKMOL}
+\texttt{packmol < data/packmol\_input.inp}
+
+Places 1 solute + 7200 waters, avoiding overlaps
+\end{block}
+
+\pause
+
+\begin{block}{Step 1.3: Convert to TIP5P-EW}
+\texttt{python3 tools/convert\_to\_tip4p.py}
+
+Adds M-site (4th atom) to each water molecule
+\end{block}
+
+\pause
+
+\begin{block}{Step 1.4: Convert to LAMMPS Format}
+\texttt{vmd -dispdev text -e tools/solvate\_vmd.tcl}
+
+Creates critical \texttt{data/system.data} file
+\end{block}
+\end{frame}
+
+\subsection{Phase 2: Simulation Execution}
+
+\begin{frame}{Phase 2: Automated Simulation Workflow}
+\begin{block}{Step 2.1: Generate All Input Files}
+\texttt{python3 scripts/sweep\_eps.py}
+
+Creates 18 LAMMPS input files (6 $\varepsilon$ $\times$ 3 replicas)
+
+Directory structure: \texttt{experiments/eps\_X/replica\_Y/run.in}
+\end{block}
+
+\pause
+
+\begin{block}{Step 2.2: Run Simulations}
+\textbf{CPU:} \texttt{mpirun -np 1 lmp\_mpi -in run.in}
+
+\textbf{GPU:} \texttt{lmp -k on g 1 -in run.in}
+
+\textbf{Expected runtime:} $\sim$4-8 hours on modern GPU (A40/A6000)
+\end{block}
+
+\pause
+
+\begin{alertblock}{Total Simulation Time}
+18 simulations $\times$ 6 hours = $\sim$108 hours (4.5 days) if run sequentially
+
+Much faster if parallelized across multiple GPUs
+\end{alertblock}
+\end{frame}
+
+\subsection{Phase 3: Analysis}
+
+\begin{frame}{Phase 3.1: RDF Computation}
+\begin{block}{During Simulation}
+LAMMPS computes RDF during production run:
+\begin{itemize}
+\item \texttt{compute rdf\_run SOLUTE OXYGEN rdf}
+\item \texttt{fix ave/time} accumulates time averages
+\item Output: \texttt{rdf\_solute\_O.dat}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Phase 3.2: Coordination Number Calculation}
+\begin{block}{Integration of RDF}
+Calculate hydration number by integrating RDF to first minimum:
+
+$$N = 4\pi\rho \int_0^{r_{\text{min}}} g(r) r^2 dr$$
+
+where:
+\begin{itemize}
+\item $N$ = coordination number
+\item $\rho$ = bulk water density
+\item $r_{\text{min}}$ = position of first minimum in RDF
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Python Implementation}
+\texttt{python3 analysis/compute\_rdf.py}
+
+Parses LAMMPS output and calculates $N$ for each replica
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Phase 3.3: Statistical Analysis and Visualization}
+\begin{block}{Aggregate Results}
+\begin{enumerate}
+\item Average hydration number across 3 replicas for each $\varepsilon$
+\item Calculate standard deviation for error bars
+\item Create publication-quality plot
+\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Final Output}
+Plot of hydration number vs. $\varepsilon$ showing:
+\begin{itemize}
+\item Transition from hydrophobic to hydrophilic regime
+\item Statistical uncertainty from replicas
+\item Clear trend in solvation structure
+\end{itemize}
+
+This plot is the primary scientific result of foundational MD phase
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Phase 3.4: ML Model Training}
+\begin{block}{Using the Generated Data}
+\begin{enumerate}
+\item Load aggregated dataset (averaged over replicas)
+\item Split into training and test sets
+\item Train chosen ML model (Random Forest, XGBoost, or Neural Network)
+\item Validate on held-out $\varepsilon$ values
+\item Generate predictions for interpolated/extrapolated values
+\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Success Metric}
+ML model should predict hydration number (or full RDF) for unseen $\varepsilon$ with error comparable to statistical uncertainty from MD replicas
+\end{exampleblock}
+\end{frame}
+
+\section{Technical Implementation Details}
+
+\begin{frame}{Overview of Technical Implementation}
+\begin{block}{Five Key Algorithmic Components}
+\begin{enumerate}
+\item \textbf{MD Engine:} Newton's equations integration
+\item \textbf{Thermodynamic Control:} Temperature and pressure regulation
+\item \textbf{Electrostatics:} Ewald summation for long-range forces
+\item \textbf{Analysis:} RDF computation and coordination numbers
+\item \textbf{Machine Learning:} Neural networks and clustering
+\end{enumerate}
+\end{block}
+\end{frame}
+\begin{frame}{Conclusion: Key Takeaways}
+    \small
+\begin{block}{Research Problem Transformation}
+\begin{itemize}
+\item \textbf{From:} Simple binary classification (hydrophobic vs. hydrophilic)
+\item \textbf{To:} Complex interplay of surface chemistry, morphology, and spatial confinement
+\item \textbf{Grounded in:} Literature synthesis from 7 key papers
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{Methodological Innovation}
+\begin{itemize}
+\item \textbf{Hybrid MD-ML Framework:} High-fidelity simulations + machine learning
+\item \textbf{Predictive Capability:} Instant RDF prediction from $\varepsilon$ values
+\item \textbf{Autonomous Discovery:} Unsupervised identification of interfacial water states
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{Scientific Impact}
+\begin{itemize}
+\item \textbf{Theoretical:} Mechanistic understanding of nanoparticle-water interfaces
+\item \textbf{Practical:} Orders-of-magnitude speedup in parameter space exploration
+\item \textbf{Transformative:} From descriptive to predictive computational chemistry
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{alertblock}{The Paradigm Shift}
+This work demonstrates how integrating machine learning with molecular dynamics transforms computational chemistry from \textbf{expensive black-box calculations} to \textbf{intelligent, data-driven prediction}, enabling rapid exploration of chemical space and discovery of new phenomena.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+\bibliography{refs}
+\end{frame}
+\subsection{Molecular Dynamics Engine}
+
+\begin{frame}{The Potential Energy Function}
+\begin{block}{Total Energy of the System}
+The potential energy function describes the total energy given positions of all $N$ atoms:
+
+$$ U(\mathbf{r}^N) = \sum_{i<j} U_{LJ}(r_{ij}) + \sum_{i<j} U_{Coulomb}(r_{ij}) $$
+\end{block}
+
+\pause
+
+\begin{block}{Lennard-Jones Potential}
+Describes short-range repulsion and van der Waals attraction:
+$$ U_{LJ}(r_{ij}) = 4\epsilon_{ij} \left[ \left(\frac{\sigma_{ij}}{r_{ij}}\right)^{12} - \left(\frac{\sigma_{ij}}{r_{ij}}\right)^6 \right] $$
+\end{block}
+
+\pause
+
+\begin{block}{Coulomb Potential}
+Describes electrostatic interactions between point charges:
+$$ U_{Coulomb}(r_{ij}) = \frac{1}{4\pi\epsilon_0} \frac{q_i q_j}{r_{ij}} $$
+\end{block}
+\end{frame}
+
+\begin{frame}{From Energy to Forces}
+\begin{block}{Force Calculation}
+The force on atom $i$ is the negative gradient of potential energy:
+
+$$ \mathbf{F}_i = -\nabla_{\mathbf{r}_i} U(\mathbf{r}^N) $$
+\end{block}
+
+\pause
+
+\begin{alertblock}{Computational Bottleneck}
+This requires summing forces from all other relevant particles - the most expensive part of MD simulation.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Velocity Verlet Integration}
+\begin{block}{Time Integration Algorithm}
+Given positions $\mathbf{r}(t)$, velocities $\mathbf{v}(t)$, accelerations $\mathbf{a}(t)$ at time $t$:
+
+\textbf{Step 1:} Calculate new positions and half-step velocities
+$$ \mathbf{r}(t + \Delta t) = \mathbf{r}(t) + \mathbf{v}(t)\Delta t + \frac{1}{2}\mathbf{a}(t)\Delta t^2 $$
+$$ \mathbf{v}(t + \frac{1}{2}\Delta t) = \mathbf{v}(t) + \frac{1}{2}\mathbf{a}(t)\Delta t $$
+\end{block}
+
+\pause
+
+\begin{block}{Step 2:} Calculate forces and new accelerations
+$$ \mathbf{a}(t + \Delta t) = \frac{\mathbf{F}(t + \Delta t)}{m} $$
+\end{block}
+
+\pause
+
+\begin{block}{Step 3:} Calculate final full-step velocities
+$$ \mathbf{v}(t + \Delta t) = \mathbf{v}(t + \frac{1}{2}\Delta t) + \frac{1}{2}\mathbf{a}(t + \Delta t)\Delta t $$
+\end{block}
+\end{frame}
+
+\subsection{Thermodynamic Ensemble Control}
+
+\begin{frame}{Nosé-Hoover Thermostat (NVT)}
+\begin{block}{Temperature Control}
+Introduces additional degree of freedom $\xi$ (thermal reservoir):
+
+$$ \dot{\mathbf{p}}_i = \mathbf{F}_i - \xi \mathbf{p}_i $$
+$$ \dot{\xi} = \frac{1}{Q} \left( \sum_i \frac{\mathbf{p}_i^2}{m_i} - g k_B T_{target} \right) $$
+\end{block}
+
+\pause
+
+\begin{itemize}
+\item $Q$: Thermostat "mass" (controls fluctuation frequency)
+\item $g$: Number of degrees of freedom
+\item If system too hot: $\xi$ increases, friction term cools system
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Rigid Body Algorithm for Water}
+\begin{block}{Fix rigid/small in LAMMPS}
+For rigid water models (TIP5P-EW), treats each molecule as single entity:
+
+\begin{enumerate}
+\item \textbf{Compute Forces:} Total force $\mathbf{F}_{total}$ and torque $\mathbf{\tau}_{total}$ on center of mass
+\item \textbf{Integrate Motion:} Update translational/rotational velocity of molecule as whole
+\item \textbf{Update Atoms:} Calculate individual atom positions from new center of mass position/orientation
+\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{alertblock}{Why Rigid?}
+2.0 fs timestep would break water bonds without rigid constraints - this is more efficient than SHAKE.
+\end{alertblock}
+\end{frame}
+
+\subsection{Electrostatics: Ewald Summation}
+
+\begin{frame}{The Ewald Summation Problem}
+\begin{block}{Challenge}
+Coulomb potential $1/r$ decays slowly. In periodic systems, atoms interact with infinite periodic images.
+\end{block}
+
+\pause
+
+\begin{alertblock}{Solution: Ewald Summation}
+Split interaction into short-range and long-range parts using Gaussian screening.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Ewald Splitting}
+\begin{block}{Mathematical Splitting}
+$$ \frac{1}{r} = \underbrace{\frac{\text{erfc}(\alpha r)}{r}}_{\text{Short-Range}} + \underbrace{\frac{\text{erf}(\alpha r)}{r}}_{\text{Long-Range}} $$
+\end{block}
+
+\pause
+
+\begin{itemize}
+\item \textbf{Short-range:} Decays rapidly, computed in real space with cutoff
+\item \textbf{Long-range:} Smooth Gaussians, computed efficiently in reciprocal space via FFT
+\end{itemize}
+
+\pause
+
+\begin{block}{PME Algorithm (pppm/tip4p)}
+\begin{enumerate}
+\item Charge assignment to 3D grid
+\item FFT to solve Poisson equation
+\item Inverse FFT for potential
+\item Force interpolation back to atoms
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\subsection{Analysis Algorithms}
+
+\begin{frame}{Radial Distribution Function (RDF)}
+\begin{block}{Computational Implementation}
+RDF calculated via histogram method:
+
+\begin{enumerate}
+\item Create histogram array of $N_{bins}$ counters
+\item For each solute-water pair: calculate $r_{ij}$, find bin $\lfloor r_{ij}/\Delta r \rfloor$
+\item Increment histogram[bin]++
+\item Normalize with spherical shell volume factor:
+$$ g(r_i) = \frac{\text{histogram}[i]}{\text{num\_timesteps} \times \rho_{bulk} \times 4\pi r_i^2 \Delta r} $$
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Coordination Number Calculation}
+\begin{block}{Numerical Integration}
+Hydration number via trapezoidal rule integration:
+
+$$ N_{coord} = 4\pi\rho \int_0^{r_{min}} g(r) r^2 dr $$
+
+\pause
+
+Trapezoidal rule approximation:
+$$ \int_0^{r_{min}} f(r) dr \approx \sum_{k=1}^{M} \frac{f(r_k) + f(r_{k-1})}{2} (r_k - r_{k-1}) $$
+
+Where $f(r) = g(r)r^2$
+\end{block}
+\end{frame}
+
+\subsection{Machine Learning Algorithms}
+
+\begin{frame}{ML Goal 1: Predicting RDF with Neural Network}
+\begin{block}{Problem Formulation}
+Supervised regression: $f: \mathbb{R} \to \mathbb{R}^{200}$
+
+\begin{itemize}
+\item \textbf{Input:} $\epsilon$ (scalar)
+\item \textbf{Output:} $\mathbf{g} = [g(r_1), g(r_2), ..., g(r_{200})]$ (200-dim vector)
+\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{Multi-Layer Perceptron Architecture}
+\begin{itemize}
+\item Input layer: 1 neuron ($\epsilon$)
+\item Hidden layers: 3 layers × 64 neurons each
+\item Output layer: 200 neurons (RDF vector)
+\item Activation: ReLU function $\phi(x) = \max(0, x)$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Neural Network Training}
+\begin{block}{Forward Propagation}
+Neuron output: $a_j = \phi(\sum_i w_{ij} a_i + b_j)$
+\end{block}
+
+\pause
+
+\begin{block}{Loss Function}
+Mean Squared Error between prediction $\hat{\mathbf{g}}$ and true RDF $\mathbf{g}$:
+$$ L = \frac{1}{200} \sum_{i=1}^{200} (g_i - \hat{g}_i)^2 $$
+\end{block}
+
+\pause
+
+\begin{block}{Optimization}
+Adam optimizer minimizes loss via backpropagation:
+$$ \nabla L \rightarrow \text{update weights in direction of steepest descent} $$
+\end{block}
+\end{frame}
+
+\begin{frame}{ML Goal 2: Discovering Water States}
+\begin{block}{Unsupervised k-Means Clustering}
+Group $M$ water molecules into $k$ clusters based on feature vectors.
+
+\textbf{Algorithm:}
+\begin{enumerate}
+\item Initialize $k$ random centroids $\{\mathbf{c}_1, ..., \mathbf{c}_k\}$
+\item \textbf{Assignment:} $\text{cluster}(\mathbf{x}_i) = \arg\min_j ||\mathbf{x}_i - \mathbf{c}_j||^2$
+\item \textbf{Update:} $\mathbf{c}_j = \frac{1}{|S_j|} \sum_{\mathbf{x}_i \in S_j} \mathbf{x}_i$
+\item Repeat until convergence
+\end{enumerate}
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Features}
+Distance, tetrahedral order $S_q$, orientation, H-bond count
+\end{exampleblock}
+\end{frame}
+
+
+
+\pause
+
+\begin{block}{Acknowledgments}
+Thank you for your attention!
+\end{block}
+\end{frame}
+
+
+
+\end{document}
