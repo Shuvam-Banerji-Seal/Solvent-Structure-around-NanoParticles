@@ -36,7 +36,6 @@ packmol/
 *.synctex.gz
 *.toc
 *.vrb
-*.pdf
 *.dvi
 *.ps
 
