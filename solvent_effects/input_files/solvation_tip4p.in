@@ -1,0 +1,163 @@
+# TIP4P/2005 Water + Nanoparticle Solvation Study
+# Using SHAKE constraints (works perfectly with MPI!)
+# Based on proven water-co2 example from LAMMPS
+# Reference: Abascal & Vega, J. Chem. Phys. 123, 234505 (2005)
+
+# ============================================================================
+# INITIALIZATION
+# ============================================================================
+
+units           real              # Å, fs, kcal/mol, K, atm
+atom_style      full              # Needed for molecular water
+boundary        p p p             # Periodic boundaries
+
+# ============================================================================
+# READ SYSTEM
+# ============================================================================
+
+read_data       tip4p_system.data
+
+# Read TIP4P water molecule template (contains SHAKE info)
+molecule        h2o_mol H2O_TIP4P.txt
+
+# ============================================================================
+# FORCE FIELD
+# ============================================================================
+
+# TIP4P/2005 pair style
+# Syntax: lj/cut/tip4p/long type_O type_H bond_OH angle_HOH OM_distance cutoff
+# Type numbers will depend on nanoparticle (adjust if needed)
+pair_style      lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+pair_modify     tail yes mix arithmetic
+
+# TIP4P/2005 parameters (O-O interaction only)
+# Note: Adjust type numbers based on your nanoparticle
+# If NP has 2 types, water types are: 3=O, 4=H, 5=M
+pair_coeff      3 3  0.1852  3.1589   # TIP4P/2005 O-O
+
+# Hydrogen and M-site have no LJ interactions
+pair_coeff      4 4  0.0     0.0      # H-H
+pair_coeff      5 5  0.0     0.0      # M-M
+
+# Nanoparticle parameters (ADJUST FOR YOUR SYSTEM!)
+# Example for SiC:
+pair_coeff      1 1  0.40    3.826    # Si-Si (CVFF)
+pair_coeff      2 2  0.095   3.851    # C-C (CVFF)
+
+# Long-range electrostatics (TIP4P/2005 specific)
+kspace_style    pppm/tip4p  1.0e-5
+
+# Bond and angle styles (for SHAKE)
+bond_style      harmonic
+bond_coeff      1  1000.0  0.9572   # O-H
+
+angle_style     harmonic
+angle_coeff     1  1000.0  104.52   # H-O-H
+
+# ============================================================================
+# GROUPS
+# ============================================================================
+
+group           nanoparticle type 1 2
+group           water_O type 3
+group           water_H type 4
+group           water_M type 5
+group           water union water_O water_H water_M
+
+# ============================================================================
+# SHAKE CONSTRAINT
+# ============================================================================
+
+# SHAKE keeps water geometry rigid
+# This works perfectly with MPI domain decomposition!
+fix             myshk water shake 1.0e-4 200 0 b 1 a 1 mol h2o_mol
+
+# ============================================================================
+# OUTPUT SETTINGS
+# ============================================================================
+
+compute         water_temp water temp
+compute         np_temp nanoparticle temp
+
+thermo_style    custom step temp c_water_temp c_np_temp pe ke etotal press vol density
+thermo          100
+
+timestep        1.0  # 1 fs
+
+# ============================================================================
+# ENERGY MINIMIZATION
+# ============================================================================
+
+minimize        1.0e-4 1.0e-6 1000 10000
+
+write_data      tip4p_minimized.data
+print           "Minimization complete!"
+
+# ============================================================================
+# NVT EQUILIBRATION (100 ps)
+# ============================================================================
+
+reset_timestep  0
+
+velocity        all create 300.0 12345 dist gaussian
+
+# NVT thermostat
+fix             mynvt all nvt temp 300.0 300.0 100.0
+
+# Trajectory output
+dump            1 all custom 1000 tip4p_nvt.lammpstrj id mol type x y z vx vy vz
+dump_modify     1 sort id
+
+run             100000  # 100 ps
+
+unfix           mynvt
+undump          1
+
+write_data      tip4p_nvt.data
+write_restart   tip4p_nvt.restart
+
+# ============================================================================
+# NPT PRODUCTION (500 ps)
+# ============================================================================
+
+reset_timestep  0
+
+# NPT at 300 K and 1 atm
+fix             mynpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0
+
+# Trajectory output
+dump            2 all custom 1000 tip4p_npt.lammpstrj id mol type x y z vx vy vz
+dump_modify     2 sort id
+
+# RDF calculations
+compute         rdf_OO water_O rdf 100 3 3 cutoff 10.0
+compute         rdf_OH water_O rdf 100 3 4 cutoff 10.0
+fix             rdf_out all ave/time 100 10 1000 c_rdf_OO[*] c_rdf_OH[*] file tip4p_rdf.dat mode vector
+
+run             500000  # 500 ps
+
+# ============================================================================
+# FINALIZE
+# ============================================================================
+
+write_data      tip4p_final.data
+write_restart   tip4p_final.restart
+
+print           ""
+print           "=========================================="
+print           "  TIP4P/2005 Simulation Complete!"
+print           "=========================================="
+print           ""
+print           "Output files:"
+print           "  - tip4p_minimized.data (after minimization)"
+print           "  - tip4p_nvt.lammpstrj (NVT trajectory, 100 ps)"
+print           "  - tip4p_npt.lammpstrj (NPT trajectory, 500 ps)"
+print           "  - tip4p_rdf.dat (radial distribution functions)"
+print           "  - tip4p_final.data (final configuration)"
+print           "  - tip4p_final.restart (restart file)"
+print           ""
+print           "Next steps:"
+print           "  1. Visualize: vmd tip4p_npt.lammpstrj"
+print           "  2. Analyze RDF: gnuplot or Python"
+print           "  3. Run analysis scripts"
+print           ""

@@ -1,0 +1,48 @@
+# TIP5P Test Simulation - Simple Version
+# Using rigid/nve/small with serial execution
+
+units           real
+atom_style      full
+boundary        p p p
+
+read_data       tip5p_simple_100waters.data
+
+pair_style      lj/cut/coul/long 10.0
+pair_modify     tail yes mix arithmetic
+
+# TIP5P O-O parameters
+pair_coeff      3 3  0.1780  3.097   # O-O
+pair_coeff      4 4  0.0     0.0     # H-H
+pair_coeff      5 5  0.0     0.0     # L-L
+
+# NP parameters (Si, C)
+pair_coeff      1 1  0.40    3.826   # Si-Si
+pair_coeff      2 2  0.095   3.851   # C-C
+
+kspace_style    pppm  1.0e-4
+
+# No bonds/angles in data file - rigid/small handles geometry
+
+# Groups
+group           nanoparticle type 1 2
+group           water type 3 4 5
+
+# Rigid water constraint
+fix             rigid_water water rigid/nve/small molecule
+
+# Thermostat
+fix             mynvt all nvt temp 300.0 300.0 100.0
+
+thermo          100
+thermo_style    custom step temp pe ke etotal press vol density
+
+timestep        1.0
+
+# Short test run
+velocity        all create 300.0 12345
+
+dump            1 all custom 500 tip5p_test.lammpstrj id mol type x y z
+run             1000
+
+write_data      tip5p_test_final.data
+print           "SUCCESS! TIP5P simulation completed!"

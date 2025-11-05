@@ -1,0 +1,47 @@
+# Quick TIP4P/2005 Test (10 ps)
+units           real
+atom_style      full
+boundary        p p p
+
+read_data       tip4p_system.data
+molecule        h2o_mol H2O_TIP4P.txt
+
+# Adjust type numbers based on nanoparticle!
+# For SiC: 1=Si, 2=C, 3=O(water), 4=H(water), 5=M(water)
+pair_style      lj/cut/tip4p/long 3 4 1 1 0.1546 12.0
+pair_modify     tail yes
+
+pair_coeff      3 3  0.1852  3.1589   # TIP4P/2005 O-O
+pair_coeff      4 4  0.0     0.0      # H-H
+pair_coeff      5 5  0.0     0.0      # M-M
+pair_coeff      1 1  0.40    3.826    # Si-Si
+pair_coeff      2 2  0.095   3.851    # C-C
+
+kspace_style    pppm/tip4p  1.0e-4
+
+bond_style      harmonic
+bond_coeff      1  1000.0  0.9572
+
+angle_style     harmonic
+angle_coeff     1  1000.0  104.52
+
+group           water type 3 4 5
+fix             myshk water shake 1.0e-4 200 0 b 1 a 1 mol h2o_mol
+
+thermo          50
+thermo_style    custom step temp pe ke etotal press vol density
+
+timestep        1.0
+
+# Quick minimization
+minimize        1.0e-4 1.0e-6 100 1000
+
+# Short NVT run (10 ps)
+reset_timestep  0
+velocity        all create 300.0 12345
+fix             mynvt all nvt temp 300.0 300.0 100.0
+dump            1 all custom 500 tip4p_test.lammpstrj id mol type x y z
+run             10000
+
+write_data      tip4p_test_final.data
+print           "Test complete!"

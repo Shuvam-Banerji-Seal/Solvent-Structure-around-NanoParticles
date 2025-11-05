@@ -1,0 +1,249 @@
+# LAMMPS Input Script: TIP5P Water + SiC Nanoparticle Solvation
+# 
+# TIP5P Water Model: 5-site water with explicit lone pairs
+# Reference: Rick, S.W., J. Chem. Phys. 120, 6085-6093 (2004)
+# 
+# System: SiC nanoparticle surrounded by TIP5P water molecules
+# Physics: Full electrostatics with Ewald summation, rigid water constraints
+# 
+# Author: Automated System
+# Date: 2025-11-04
+
+# ============================================================================
+# INITIALIZATION
+# ============================================================================
+
+units           real              # real units: Å, fs, kcal/mol, K, atm
+atom_style      full              # full atom style (needed for mol ID and charges)
+boundary        p p p             # periodic boundary conditions
+atom_modify     map array         # For faster neighbor list building
+
+# Random seed for velocity initialization
+variable        seed equal 12345
+
+# ============================================================================
+# READ SYSTEM
+# ============================================================================
+
+read_data       ${datafile}
+
+# Atom types:
+# 1 = Si (nanoparticle)
+# 2 = C  (nanoparticle)
+# 3 = O  (water - oxygen)
+# 4 = H  (water - hydrogen)
+# 5 = L  (water - lone pair, massless virtual site)
+
+# ============================================================================
+# FORCE FIELD PARAMETERS
+# ============================================================================
+
+# Pair style: Standard LJ + Coulomb with long-range electrostatics
+# TIP5P uses standard pair style (no special pair style needed!)
+# The rigidity is enforced by fix rigid/small instead
+
+pair_style      lj/cut/coul/long 10.0
+kspace_style    pppm 1.0e-4
+
+# Pair modify settings
+pair_modify     mix arithmetic    # Arithmetic mixing for unlike pairs
+
+# LJ parameters (ε in kcal/mol, σ in Å)
+# TIP5P: Only oxygen has LJ interactions
+
+# Silicon carbide nanoparticle (Tersoff-like parameters adapted for LJ)
+pair_coeff      1 1 0.2130 3.826   # Si-Si
+pair_coeff      2 2 0.0560 3.851   # C-C
+
+# TIP5P water oxygen
+pair_coeff      3 3 0.16 3.12      # O-O (TIP5P standard)
+
+# Hydrogen and lone pairs have no LJ interactions
+pair_coeff      4 4 0.0 0.0        # H-H
+pair_coeff      5 5 0.0 0.0        # L-L
+
+# Cross interactions (Si/C with water O)
+# Using Lorentz-Berthelot combining rules (arithmetic mixing)
+pair_coeff      1 3 0.1862 3.473   # Si-O
+pair_coeff      2 3 0.0949 3.4805  # C-O
+
+# All other cross terms are automatically calculated or zero
+
+# Bond and angle styles for TIP5P water (will be constrained by SHAKE)
+bond_style      harmonic
+angle_style     harmonic
+
+# Bond coefficients (will be rigid via SHAKE, so use zero spring constant)
+bond_coeff      1 0.0 0.9572       # O-H bond
+bond_coeff      2 0.0 0.70          # O-L "bond"
+
+# Angle coefficients (will be rigid via SHAKE)
+angle_coeff     1 0.0 104.52       # H-O-H angle
+angle_coeff     2 0.0 109.47       # H-O-L angles
+angle_coeff     3 0.0 109.47       # L-O-L angle
+
+# ============================================================================
+# ATOM GROUPS
+# ============================================================================
+
+group           nanoparticle type 1 2     # Si and C atoms
+group           water type 3 4 5          # O, H, L (all water sites)
+group           water_O type 3            # Oxygen only
+group           water_H type 4            # Hydrogen only
+group           water_L type 5            # Lone pairs only
+
+# For dynamics: exclude massless sites from thermostat
+group           real_atoms type 1 2 3 4  # All atoms except lone pairs
+
+# ============================================================================
+# OUTPUT SETTINGS
+# ============================================================================
+
+# Thermo output every 1000 steps
+thermo_style    custom step temp press etotal ke pe ebond eangle evdwl ecoul elong density vol
+thermo          1000
+
+# Timestep in fs
+timestep        0.5
+
+# ============================================================================
+# ENERGY MINIMIZATION
+# ============================================================================
+
+print           "========================================="
+print           "ENERGY MINIMIZATION"
+print           "========================================="
+
+# Minimize initial structure to remove bad contacts
+minimize        1.0e-4 1.0e-6 10000 100000
+
+print           "Minimization complete!"
+print           ""
+
+# Reset timestep counter
+reset_timestep  0
+
+# ============================================================================
+# NVT EQUILIBRATION (Temperature ramp)
+# ============================================================================
+
+print           "========================================="
+print           "NVT EQUILIBRATION (50 ps)"
+print           "========================================="
+
+# Initialize velocities (only for real atoms, not lone pairs)
+velocity        real_atoms create 50.0 ${seed} dist gaussian
+
+# Constrain water geometry with rigid/small
+# Each water molecule is a rigid body (5 sites: O, H, H, L, L)
+fix             rigid_water water rigid/small molecule
+
+# NVT thermostat on nanoparticle only
+# Water gets thermalized through interactions
+fix             nvt_eq nanoparticle nvt temp 50.0 300.0 100.0
+
+# NVE on water (rigid bodies in NVE)
+fix             nve_water water nve
+
+# Compute temperature only for real atoms (exclude massless lone pairs)
+compute         temp_real real_atoms temp
+thermo_modify   temp temp_real
+
+# Trajectory output (every 1000 steps = 0.5 ps)
+dump            eq_traj all atom 1000 ${outputdir}/equilibration.lammpstrj
+dump_modify     eq_traj sort id
+
+# Run equilibration: 100,000 steps = 50 ps
+run             100000
+
+# Clean up
+undump          eq_traj
+unfix           rigid_water
+unfix           nvt_eq
+unfix           nve_water
+
+print           "Equilibration complete!"
+print           ""
+
+# ============================================================================
+# NVT PRODUCTION RUN
+# ============================================================================
+
+print           "========================================="
+print           "NVT PRODUCTION RUN (500 ps)"
+print           "========================================="
+
+# Reset timestep for production
+reset_timestep  0
+
+# Re-apply rigid/small for production
+fix             rigid_water water rigid/small molecule
+
+# NVT thermostat on nanoparticle at 300 K
+fix             nvt_prod nanoparticle nvt temp 300.0 300.0 100.0
+
+# NVE on water
+fix             nve_water water nve
+
+# High-frequency trajectory output (every 500 steps = 0.25 ps)
+dump            prod_traj all atom 500 ${outputdir}/production.lammpstrj
+dump_modify     prod_traj sort id
+
+# Custom dump with more information
+dump            prod_custom all custom 500 ${outputdir}/production_custom.dump &
+                id mol type q x y z vx vy vz fx fy fz
+dump_modify     prod_custom sort id
+
+# Restart files every 100 ps
+restart         200000 ${outputdir}/restart.*.lmp
+
+# Additional computes for analysis
+compute         pe_water water pe/atom
+compute         ke_water water ke/atom
+
+# Time-averaged properties
+fix             avg_temp all ave/time 100 10 1000 c_temp_real &
+                file ${outputdir}/temperature.dat
+
+fix             avg_press all ave/time 100 10 1000 c_thermo_press &
+                file ${outputdir}/pressure.dat
+
+# Energy components
+variable        pe_total equal pe
+variable        ke_total equal ke
+variable        e_total equal etotal
+
+fix             avg_energy all ave/time 100 10 1000 v_pe_total v_ke_total v_e_total &
+                file ${outputdir}/energy.dat
+
+# Run production: 1,000,000 steps = 500 ps
+run             1000000
+
+# ============================================================================
+# CLEANUP
+# ============================================================================
+
+print           ""
+print           "========================================="
+print           "SIMULATION COMPLETE!"
+print           "========================================="
+print           ""
+
+# Write final configuration
+write_data      ${outputdir}/final_configuration.data
+write_restart   ${outputdir}/final_restart.lmp
+
+print           "Output files written to: ${outputdir}/"
+print           "  - production.lammpstrj (trajectory)"
+print           "  - production_custom.dump (detailed trajectory)"
+print           "  - temperature.dat (time-averaged temperature)"
+print           "  - pressure.dat (time-averaged pressure)"
+print           "  - energy.dat (energy components)"
+print           "  - final_configuration.data (final structure)"
+print           ""
+print           "Next steps:"
+print           "  1. Analyze trajectory with analysis scripts"
+print           "  2. Calculate RDF, coordination numbers"
+print           "  3. Analyze hydrogen bonding"
+print           "  4. Study water orientation around nanoparticle"
+print           ""

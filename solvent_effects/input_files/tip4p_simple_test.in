@@ -1,0 +1,77 @@
+# TIP4P/2005 Water + Nanoparticle Test
+# Following exact pattern from water-co2 example
+
+units           real
+atom_style      full
+bond_style      harmonic
+angle_style     harmonic
+boundary        p p p
+
+# TIP4P pair style
+# Syntax: lj/cut/tip4p/long type_O type_H bond_type angle_type OM_distance cutoff
+pair_style      lj/cut/tip4p/long 3 4 1 1 0.1546 12.0
+kspace_style    pppm/tip4p  1.0e-5
+pair_modify     mix arithmetic tail yes
+
+# Create box
+region          box block -20 20 -20 20 -20 20
+create_box      5 box &
+                bond/types 1 &
+                angle/types 1 &
+                extra/bond/per/atom 2 &
+                extra/angle/per/atom 1 &
+                extra/special/per/atom 3
+
+# Masses
+mass            1  28.0855  # Si
+mass            2  12.0107  # C
+mass            3  15.9994  # O (water)
+mass            4  1.008    # H (water)
+mass            5  0.0001   # M (virtual site)
+
+# Pair coefficients
+pair_coeff      3 3  0.1852  3.1589   # TIP4P/2005 O-O
+pair_coeff      4 4  0.0     0.0      # H-H
+pair_coeff      5 5  0.0     0.0      # M-M
+pair_coeff      1 1  0.40    3.826    # Si-Si
+pair_coeff      2 2  0.095   3.851    # C-C
+
+# Bond/angle coefficients
+bond_coeff      1  1000.0  0.9572
+angle_coeff     1  1000.0  104.52
+
+# Add nanoparticle (simple SiC cube)
+create_atoms    1 single 0.0 0.0 0.0
+create_atoms    2 single 1.5 0.0 0.0
+create_atoms    1 single 0.0 1.5 0.0
+create_atoms    2 single 1.5 1.5 0.0
+create_atoms    1 single 0.0 0.0 1.5
+create_atoms    2 single 1.5 0.0 1.5
+create_atoms    1 single 0.0 1.5 1.5
+create_atoms    2 single 1.5 1.5 1.5
+
+# Insert water molecules  
+molecule        h2o_mol H2O_TIP4P.txt
+create_atoms    0 random 100 654312 NULL mol h2o_mol 545474 overlap 2.0 maxtry 2000
+
+# Groups
+group           nanoparticle type 1 2
+group           water type 3 4 5
+
+# Output
+dump            1 all custom 500 tip4p_test.lammpstrj id mol type x y z
+thermo          100
+thermo_style    custom step temp pe ke etotal press vol density
+
+# SHAKE (AFTER minimization would crash, so start directly with MD)
+fix             myshk water shake 1.0e-4 200 0 b 1 a 1 mol h2o_mol
+fix             mynvt all nvt temp 300.0 300.0 100.0
+fix             mymom all momentum 500 linear 1 1 1
+
+timestep        1.0
+
+# Short run (10 ps)
+run             10000
+
+write_data      tip4p_test_final.data
+print           "Test complete!"

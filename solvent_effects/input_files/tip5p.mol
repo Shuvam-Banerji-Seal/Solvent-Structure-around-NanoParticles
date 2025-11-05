@@ -1,0 +1,63 @@
+# TIP5P water molecule
+# 5-site model with 2 lone pairs
+# Reference: Mahoney & Jorgensen, J. Chem. Phys. 112, 8910 (2000)
+
+5 atoms
+4 bonds
+6 angles
+
+Coords
+
+1    0.00000  -0.06556   0.00000  # O
+2    0.75695   0.52032   0.00000  # H1
+3   -0.75695   0.52032   0.00000  # H2
+4    0.00000  -0.46971   0.57154  # L1
+5    0.00000  -0.46971  -0.57154  # L2
+
+Types
+
+1        1   # O (oxygen)
+2        2   # H (hydrogen)
+3        2   # H (hydrogen)
+4        3   # L (lone pair)
+5        3   # L (lone pair)
+
+Charges
+
+1        0.000   # O
+2        0.241   # H
+3        0.241   # H
+4       -0.241   # L
+5       -0.241   # L
+
+Bonds
+
+1   1   1   2   # O-H1
+2   1   1   3   # O-H2
+3   2   1   4   # O-L1
+4   2   1   5   # O-L2
+
+Angles
+
+1   1   2   1   3   # H-O-H
+2   2   2   1   4   # H-O-L
+3   2   2   1   5   # H-O-L
+4   2   3   1   4   # H-O-L
+5   2   3   1   5   # H-O-L
+6   3   4   1   5   # L-O-L
+
+Special Bond Counts
+
+1   4   0   0
+2   1   1   0
+3   1   1   0
+4   1   1   0
+5   1   1   0
+
+Special Bonds
+
+1   2   3   4   5
+2   1
+3   1
+4   1
+5   1

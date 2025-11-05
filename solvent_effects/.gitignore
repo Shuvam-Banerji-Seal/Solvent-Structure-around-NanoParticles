@@ -1,0 +1,49 @@
+# Output and temporary files
+output/
+*.lammpstrj
+*.restart
+*.dump
+*.log
+
+# Large nanoparticle files (except essential ones)
+input_files/GO_nanoparticle.data
+input_files/amorphous_carbon.data
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary downloads
+tmp/
+temp/
+.tmp/
+
+# Data analysis
+*.png
+*.pdf
+*.csv
+validation_report.txt

@@ -1,0 +1,121 @@
+# TIP5P Water + Nanoparticle Solvation Study
+# Using SHAKE for rigid water geometry (following water-co2 example)
+# Adapted from working TIP4P approach
+
+# ========== INITIALIZATION ==========
+units           real
+atom_style      full
+boundary        p p p
+
+# Note: Use with single MPI process to avoid rigid body decomposition
+# Run with: mpirun -np 1 lmp_mpi -in solvation_tip5p_shake.in
+
+# ========== READ DATA ==========
+read_data       tip5p_system_initial.data
+
+# No need for molecule template - bonds/angles already in data file
+
+# ========== FORCE FIELD ==========
+# Use standard LJ + Coulomb with SHAKE
+# (TIP5P doesn't need special pair style, just standard + SHAKE)
+
+pair_style      lj/cut/coul/long 10.0
+pair_modify     tail yes mix arithmetic
+
+# Nanoparticle LJ parameters (example: SiC)
+# Type 1: Si or nanoparticle atom 1
+# Type 2: C or nanoparticle atom 2
+# Type 3: O (water oxygen)
+# Type 4: H (water hydrogen)
+# Type 5: L (water lone pair)
+
+# TIP5P water O-O parameters (Mahoney & Jorgensen 2000)
+pair_coeff      3 3  0.1780  3.097   # O-O (epsilon in kcal/mol, sigma in Angstrom)
+
+# Hydrogen and lone pairs have no LJ interactions
+pair_coeff      4 4  0.0     0.0     # H-H
+pair_coeff      5 5  0.0     0.0     # L-L
+
+# Nanoparticle parameters (adjust based on your system)
+pair_coeff      1 1  0.40    3.826   # Si-Si (example CVFF)
+pair_coeff      2 2  0.095   3.851   # C-C (example CVFF)
+
+# Cross-terms (use mixing rules or set explicitly)
+# Let LAMMPS calculate cross-terms with arithmetic mixing
+
+# Kspace for long-range electrostatics
+kspace_style    pppm  1.0e-4
+
+# No bond/angle forces - rigid/small maintains geometry
+bond_style      none
+angle_style     none
+special_bonds   lj/coul 0.0 0.0 0.0
+
+# ========== GROUPS ==========
+group           nanoparticle type 1 2
+group           water_O type 3
+group           water_H type 4
+group           water_L type 5
+group           water union water_O water_H water_L
+
+# ========== RIGID CONSTRAINT ==========
+# TIP5P has 5 atoms, SHAKE has 4-atom limit, so use rigid/nve/small
+# This keeps water geometry rigid without thermostat (we'll add separate thermostat)
+fix             rigid_water water rigid/nve/small molecule
+
+# ========== OUTPUT SETTINGS ==========
+compute         water_temp water temp
+compute         np_temp nanoparticle temp
+
+thermo_style    custom step temp c_water_temp c_np_temp pe ke etotal press vol density
+thermo          100
+
+# ========== MINIMIZATION ==========
+minimize        1.0e-4 1.0e-6 1000 10000
+write_data      tip5p_minimized.data
+
+# ========== NVT EQUILIBRATION ==========
+reset_timestep  0
+timestep        1.0
+
+velocity        all create 300.0 12345 dist gaussian
+
+# NVT thermostat for all atoms
+fix             mynvt all nvt temp 300.0 300.0 100.0
+
+# Trajectory output
+dump            1 all custom 1000 tip5p_nvt.lammpstrj id mol type x y z vx vy vz
+dump_modify     1 sort id
+
+run             10000  # 10 ps
+
+unfix           mynvt
+undump          1
+
+# ========== NPT PRODUCTION ==========
+reset_timestep  0
+
+# NPT at 300 K and 1 atm
+fix             mynpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0
+
+# Trajectory output
+dump            2 all custom 1000 tip5p_npt.lammpstrj id mol type x y z vx vy vz
+dump_modify     2 sort id
+
+# RDF calculations
+compute         rdf_OO water_O rdf 100 3 3 cutoff 10.0
+compute         rdf_OH water_O rdf 100 3 4 cutoff 10.0
+fix             rdf_out all ave/time 100 10 1000 c_rdf_OO[*] c_rdf_OH[*] file tip5p_rdf.dat mode vector
+
+run             50000  # 50 ps
+
+write_data      tip5p_final.data
+write_restart   tip5p_final.restart
+
+print           "Simulation complete!"
+print           "Output files:"
+print           "  - tip5p_minimized.data (after minimization)"
+print           "  - tip5p_nvt.lammpstrj (NVT trajectory)"
+print           "  - tip5p_npt.lammpstrj (NPT trajectory)"
+print           "  - tip5p_rdf.dat (radial distribution functions)"
+print           "  - tip5p_final.data (final configuration)"
