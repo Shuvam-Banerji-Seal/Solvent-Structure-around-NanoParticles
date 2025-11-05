@@ -2,445 +2,891 @@
 
 
 
-A comprehensive TIP4P/2005 water molecular dynamics simulation framework for studying solvation structure around nanoparticles.A comprehensive TIP4P/2005 water molecular dynamics simulation framework for studying solvation structure around nanoparticles.
+A comprehensive TIP4P/2005 water molecular dynamics simulation framework for studying solvation structure around nanoparticles.
 
 
 
-## 🎯 Overview## 🎯 Overview
+## 🎯 OverviewA comprehensive TIP4P/2005 water molecular dynamics simulation framework for studying solvation structure around nanoparticles.A comprehensive TIP4P/2005 water molecular dynamics simulation framework for studying solvation structure around nanoparticles.
 
 
+
+This system provides production-ready tools for:
+
+- **MD simulations** of water around nanoparticles (picosecond to nanosecond scale)
+
+- **Structural analysis** of solvation shells (RDF, coordination, H-bonds)## 🎯 Overview## 🎯 Overview
+
+- **Thermodynamic tracking** (temperature, energy, pressure)
+
+- **Simulation validation** and quality assessment
+
+- **Batch processing** across multiple nanoparticles
 
 This system provides production-ready tools for:This system provides production-ready tools for:
 
+## 📋 Quick Setup
+
 - **MD simulations** of water around nanoparticles (picosecond to nanosecond scale)- **MD simulations** of water around nanoparticles (picosecond to nanosecond scale)
 
-- **Structural analysis** of solvation shells (RDF, coordination, H-bonds)- **Structural analysis** of solvation shells (RDF, coordination, H-bonds)
+### 1. Clone Repository
 
-- **Thermodynamic tracking** (temperature, energy, pressure)- **Thermodynamic tracking** (temperature, energy, pressure)
+```bash- **Structural analysis** of solvation shells (RDF, coordination, H-bonds)- **Structural analysis** of solvation shells (RDF, coordination, H-bonds)
 
-- **Simulation validation** and quality assessment- **Simulation validation** and quality assessment
+git clone git@github.com:Shuvam-Banerji-Seal/Solvent-Structure-around-NanoParticles.git
+
+cd Solvent-Structure-around-NanoParticles- **Thermodynamic tracking** (temperature, energy, pressure)- **Thermodynamic tracking** (temperature, energy, pressure)
+
+git checkout using_sample_files
+
+cd solvent_effects- **Simulation validation** and quality assessment- **Simulation validation** and quality assessment
+
+```
 
 - **Batch processing** across multiple nanoparticles- **Batch processing** across multiple nanoparticles
 
+### 2. Download Required Data Files
 
+
+
+The system uses nanoparticle structures from the Atomify project and LAMMPS examples:
 
 ## 📋 Quick Setup## 📋 Quick Setup
 
+```bash
 
+# Option A: Download automatically
+
+bash setup_data_files.sh
 
 ### 1. Clone Repository### 1. Clone Repository
 
-```bash```bash
+# Option B: Manual download
+
+# Clone atomify for nanoparticle structures```bash
+
+git clone https://github.com/andeplane/atomify.git
 
 git clone git@github.com:Shuvam-Banerji-Seal/Solvent-Structure-around-NanoParticles.gitgit clone git@github.com:Shuvam-Banerji-Seal/Solvent-Structure-around-NanoParticles.git
 
-cd Solvent-Structure-around-NanoParticlescd Solvent-Structure-around-NanoParticles
+# Clone lammps-input-files for water molecule template  
 
-git checkout using_sample_filesgit checkout using_sample_files
+git clone https://github.com/simongravelle/lammps-input-files.gitcd Solvent-Structure-around-NanoParticlescd Solvent-Structure-around-NanoParticles
 
-cd solvent_effectscd solvent_effects
+
+
+# Copy required filesgit checkout using_sample_filesgit checkout using_sample_files
+
+cp atomify/public/examples/sic/nanoparticle/sic_nanoparticle.data input_files/
+
+cp lammps-input-files/LAMMPS-molecules/H2O_TIP4P.txt input_files/cd solvent_effectscd solvent_effects
+
+```
+
+```
+
+### 3. Install Dependencies
+
+```bash
+
+# Python packages
+
+pip install numpy matplotlib scipy scikit-learn### 2. Download Required Data Files### 2. Download Required Data Files
+
+
+
+# LAMMPS with MPI (Ubuntu/Debian)
+
+sudo apt-get install lammps-mpi
+
+The system uses nanoparticle structures from the Atomify project and LAMMPS examples:The system uses nanoparticle structures from the Atomify project and LAMMPS examples:
+
+# Or build from source: https://docs.lammps.org/Build.html
+
+```
+
+
+
+### 4. Verify Setup```bash
+
+```bash
+
+python -c "import numpy, matplotlib; print('✓ Python OK')"# Option A: Download automatically# Option A: Download automatically (one command)
+
+which mpirun && which lmp_mpi && echo "✓ LAMMPS OK"
+
+```bash setup_data_files.shbash setup_data_files.sh
+
+
+
+## 📁 Directory Structure
+
+
+
+```# Option B: Manual download# Option B: Manual download
+
+solvent_effects/
+
+├── README.md                          ⭐ START HERE# Clone atomify for nanoparticle structures# Clone atomify for nanoparticle structures
+
+├── START_HERE.md                      Quick overview
+
+├── VALIDATION_GUIDE.md                How to validategit clone https://github.com/andeplane/atomify.gitgit clone https://github.com/andeplane/atomify.git
+
+├── README_ENHANCED.md                 Complete manual (70+ examples)
+
+├── QUICK_REFERENCE_ENHANCED.sh        Command reference
+
+│
+
+├── shell_scripts/                     Simulation runners ⭐ KEY# Clone lammps-input-files for water molecule template  # Clone lammps-input-files for water molecule template
+
+│   ├── run_solvation_study.sh        Advanced runner (RECOMMENDED)
+
+│   ├── batch_run_solvation.sh        Batch processorgit clone https://github.com/simongravelle/lammps-input-files.gitgit clone https://github.com/simongravelle/lammps-input-files.git
+
+│   └── run_simulation.sh             Legacy runner
+
+│
+
+├── analysis/                          Analysis scripts ⭐ KEY
+
+│   ├── validate_simulation.py         Validate quality (RECOMMENDED)# Copy required files# Copy required files
+
+│   ├── analyze_tip4p_simple.py        Thermodynamic analysis
+
+│   ├── analyze_solvation_advanced.py  Structural analysiscp atomify/public/examples/sic/nanoparticle/sic_nanoparticle.data input_files/cp atomify/public/examples/sic/nanoparticle/sic_nanoparticle.data input_files/
+
+│   └── README.md                      Analysis guide
+
+│cp lammps-input-files/LAMMPS-molecules/H2O_TIP4P.txt input_files/cp lammps-input-files/LAMMPS-molecules/H2O_TIP4P.txt input_files/
+
+├── input_files/                       Molecular templates ⭐ ESSENTIAL
+
+│   ├── H2O_TIP4P.txt                 Water template (REQUIRED)```
+
+│   └── sic_nanoparticle.data         SiC nanoparticle (from atomify)# Copy more nanoparticles as needed
+
+│
+
+├── output/                            Simulation resultscp atomify/public/examples/GO-nanoparticle/GO_nanoparticle.data input_files/
+
+│   └── SiC_500w_10ps_.../            Example completed runs
+
+│### 3. Install Dependenciescp lammps-input-files/inputs/amorphous-carbon/amorphous_carbon.data input_files/
+
+└── docs/                              Detailed documentation
+
+``````bash```
+
+
+
+## 🚀 Quick Start# Python packages
+
+
+
+### Test Simulation (30-45 min)pip install numpy matplotlib scipy scikit-learn### 3. Install Dependencies
+
+```bash
+
+cd shell_scripts```bash
+
+./run_solvation_study.sh SiC 500 100 10
+
+```# LAMMPS with MPI (Ubuntu/Debian)# Python packages
+
+
+
+### Validate Resultssudo apt-get install lammps-mpipip install numpy matplotlib scipy scikit-learn
+
+```bash
+
+cd ../analysis
+
+python validate_simulation.py ../output/SiC_500w_100ps_*/
+
+```# Or build from source: https://docs.lammps.org/Build.html# LAMMPS with MPI (required for simulations)
+
+
+
+## 🔧 Shell Scripts```# Ubuntu/Debian:
+
+
+
+### `run_solvation_study.sh` ⭐ RECOMMENDEDsudo apt-get install lammps-mpi
+
+**Advanced simulation runner with full parameter control**
+
+### 4. Verify Setup
+
+**What it does**:
+
+- Runs TIP4P/2005 water MD simulations  ```bash# Or build from source: https://docs.lammps.org/Build.html
+
+- Full parameter control via flags
+
+- Supports ps to ns scalepython -c "import numpy, matplotlib; print('✓ Python OK')"```
+
+- Manages equilibration and production
+
+- Generates trajectory, logs, RDFwhich mpirun && which lmp_mpi && echo "✓ LAMMPS OK"
+
+- Provides progress tracking
+
+```### 4. Verify Setup
+
+**Usage**:
+
+```bash```bash
+
+./run_solvation_study.sh NP_NAME NUM_WATERS TIME NUM_CORES [OPTIONS]
+
+```## 📁 Directory Structure# Test Python environment
+
+
+
+**Examples**:python -c "import numpy, matplotlib; print('✓ Python OK')"
+
+```bash
+
+# 100 ps test```
+
+./run_solvation_study.sh SiC 500 100 10
+
+solvent_effects/# Test LAMMPS
+
+# 5 ns production  
+
+./run_solvation_study.sh GO 1000 5 10 --ns --dump-freq 5000├── README.md                          ⭐ START HEREwhich mpirun && which lmp_mpi && echo "✓ LAMMPS OK"
+
+
+
+# Custom settings├── START_HERE.md                      Quick overview
+
+./run_solvation_study.sh SiC 500 1 10 --ns --temp 350 --timestep 2.0
+
+```├── VALIDATION_GUIDE.md                How to validate# Test basic simulation
+
+
+
+**Flags**:├── README_ENHANCED.md                 Complete manual (70+ examples)cd shell_scripts
+
+```
+
+--timestep FLOAT      Timestep in fs (default: 1.0)├── QUICK_REFERENCE_ENHANCED.sh        Command reference./run_solvation_study.sh SiC 500 10 4  # Quick 10 ps test
+
+--temp FLOAT          Temperature in K (default: 300.0)
+
+--dump-freq INT       Trajectory dump frequency (default: 1000)│```
+
+--thermo-freq INT     Thermo output frequency (default: 500)
+
+--box-size FLOAT      Box size in Å (default: auto)├── shell_scripts/                     Simulation runners ⭐ KEY
+
+--equilibration INT   Equilibration steps (default: 10000)
+
+--production          Skip equilibration│   ├── run_solvation_study.sh        Advanced runner (RECOMMENDED)## 📁 Directory Structure
+
+--ns                  Use nanosecond units
+
+--restart FILE        Continue from restart file│   ├── batch_run_solvation.sh        Batch processor
+
+--output-dir DIR      Custom output directory
+
+--label LABEL         Custom label for run│   └── run_simulation.sh             Legacy runner```
+
+--help                Show help
+
+```│solvent_effects/
+
+
+
+**Output files**:├── analysis/                          Analysis scripts ⭐ KEY├── README.md                          (This file) ⭐ START HERE
+
+- `trajectory.lammpstrj` - Full trajectory
+
+- `log.lammps` - Thermodynamic log│   ├── validate_simulation.py         Validate quality (RECOMMENDED)├── START_HERE.md                      Quick overview & getting started
+
+- `final_config.data` - Final structure
+
+- `final.restart` - Restart file│   ├── analyze_tip4p_simple.py        Thermodynamic analysis├── VALIDATION_GUIDE.md                How to validate simulations
+
+- `rdf_np_water.dat` - RDF data
+
+- `np_com.dat` - NP center of mass│   ├── analyze_solvation_advanced.py  Structural analysis├── ENHANCEMENT_SUMMARY.md             System improvements summary
+
+
+
+---│   └── README.md                      Analysis guide├── README_ENHANCED.md                 Complete feature manual (70+ examples)
+
+
+
+### `batch_run_solvation.sh`│├── QUICK_REFERENCE_ENHANCED.sh        Command reference & examples
+
+**Run multiple simulations in batch**
+
+├── input_files/                       Molecular templates ⭐ ESSENTIAL│
+
+**Usage**:
+
+```bash│   ├── H2O_TIP4P.txt                 Water template (REQUIRED)├── shell_scripts/                     Simulation runners ⭐ KEY FILES
+
+./batch_run_solvation.sh [OPTIONS]
+
+```│   └── sic_nanoparticle.data         SiC nanoparticle (from atomify)│   ├── run_solvation_study.sh        Advanced runner with full control (RECOMMENDED)
+
+
+
+**Examples**:││   ├── batch_run_solvation.sh        Batch processor for multiple NPs
+
+```bash
+
+# Test all nanoparticles├── output/                            Simulation results│   ├── run_simulation.sh             Legacy runner (for reference)
+
+./batch_run_solvation.sh --all-nps --test --cores 10
+
+│   └── SiC_500w_10ps_.../            Example completed runs│   └── run_tip5p_simulation.sh       TIP5P runner (not recommended - slower)
+
+# Production runs
+
+./batch_run_solvation.sh --all-nps --production --cores 16││
+
+```
+
+└── docs/                              Detailed documentation├── analysis/                          Analysis & validation scripts ⭐ KEY FILES
+
+**Options**:
+
+``````│   ├── validate_simulation.py         Validates simulation quality (RECOMMENDED)
+
+--all-nps            Run SiC, GO, amorphous carbon
+
+--nps LIST           Comma-separated list (e.g., SiC,GO)│   ├── analyze_tip4p_simple.py        Thermodynamic analysis
+
+--waters N           Number of waters (default: 500)
+
+--time T             Simulation time (default: 100)## 🚀 Quick Start│   ├── analyze_solvation_advanced.py  Structural analysis (RDF, coordination)
+
+--ns                 Use nanosecond units
+
+--cores N            CPU cores (default: 8)│   ├── analyze_quick.py               Quick analysis
+
+--test               Quick test mode (100 ps)
+
+--production         Production mode (5 ns)### Test Simulation (30-45 min)│   └── README.md                      Analysis guide
+
+```
+
+```bash│
+
+---
+
+cd shell_scripts├── input_files/                       Molecular templates ⭐ ESSENTIAL
+
+## 📊 Analysis Scripts
+
+./run_solvation_study.sh SiC 500 100 10│   ├── H2O_TIP4P.txt                 TIP4P water template (REQUIRED)
+
+### `validate_simulation.py` ⭐ RECOMMENDED
+
+**Validate if simulation is good quality**```│   ├── sic_nanoparticle.data         SiC nanoparticle (from atomify)
+
+
+
+**What it checks**:│   └── *.in, *.mol                   Legacy LAMMPS inputs
+
+- File completeness
+
+- Temperature stability### Validate Results│
+
+- Energy conservation
+
+- RDF structure quality```bash├── output/                            Simulation results
+
+- Trajectory completeness
+
+- Overall quality with recommendationscd ../analysis│   ├── SiC_500w_10ps_.../            Example completed runs
+
+
+
+**Usage**:python validate_simulation.py ../output/SiC_500w_100ps_*/│   │   ├── trajectory.lammpstrj      Full trajectory for visualization
+
+```bash
+
+python validate_simulation.py OUTPUT_DIR```│   │   ├── log.lammps                LAMMPS thermodynamic log
+
+
+
+# Examples│   │   ├── final_config.data         Final structure
+
+python validate_simulation.py ../output/SiC_500w_100ps_*/
+
+for dir in ../output/*/; do python validate_simulation.py "$dir"; done## 🔧 Shell Scripts│   │   ├── final.restart             Restart file for continuation
+
+```
+
+│   │   ├── validation_report.png     Validation quality plots
+
+**Output**:
+
+- `validation_report.png` - 3-panel plot### `run_solvation_study.sh` ⭐ RECOMMENDED│   │   └── validation_summary.txt    Quality report
+
+- `validation_summary.txt` - Quality report
+
+**Advanced simulation runner with full parameter control**│   └── ...
+
+**What's Good**:
+
+│
+
+| Metric | Good | Acceptable | Poor |
+
+|--------|------|-----------|------|**What it does**:├── python_scripts/                    System setup utilities
+
+| Temperature | ±20 K | ±50 K | >50 K |
+
+| Energy drift | <1% | <5% | >10% |- Runs TIP4P/2005 water MD simulations  │   ├── prepare_tip4p_system.py        Create TIP4P systems
+
+| RDF peak | g(r)>1.5 | g(r)>1.0 | g(r)<1.0 |
+
+| Frames | >100 | >50 | <50 |- Full parameter control via flags│   ├── prepare_tip5p_system.py        Create TIP5P systems
+
+
+
+---- Supports ps to ns scale│   └── ...
+
+
+
+### `analyze_tip4p_simple.py`- Manages equilibration and production│
+
+**Analyze thermodynamic properties**
+
+- Generates trajectory, logs, RDF└── docs/                              Detailed documentation
+
+**What it does**:
+
+- Parses LAMMPS log file- Provides progress tracking    ├── QUICK_START_SUCCESS.md         Successful setup guide
+
+- Temperature statistics
+
+- Energy conservation    ├── TIP4P_SUCCESS.md               TIP4P water model info
+
+- Pressure, density analysis
+
+- Generates 6-panel plot**Usage**:    ├── NANOPARTICLES_AVAILABLE.md     NP options
+
+- Analysis report
+
+```bash    └── *.md                           Previous guides & notes
+
+**Usage**:
+
+```bash./run_solvation_study.sh NP_NAME NUM_WATERS TIME NUM_CORES [OPTIONS]```
+
+python analyze_tip4p_simple.py ../output/SiC_500w_100ps_20251105_145951/
 
 ``````
 
 
 
-### 2. Download Required Data Files### 2. Download Required Data Files
+---## 🚀 Quick Start Examples
 
 
 
-The system uses nanoparticle structures from the Atomify project and LAMMPS examples:The system uses nanoparticle structures from the Atomify project and LAMMPS examples:
+### `analyze_solvation_advanced.py`**Examples**:
 
-
-
-```bash```bash
-
-# Option A: Download automatically# Option A: Download automatically (one command)
-
-bash setup_data_files.shbash setup_data_files.sh
-
-
-
-# Option B: Manual download# Option B: Manual download
-
-# Clone atomify for nanoparticle structures# Clone atomify for nanoparticle structures
-
-git clone https://github.com/andeplane/atomify.gitgit clone https://github.com/andeplane/atomify.git
-
-
-
-# Clone lammps-input-files for water molecule template  # Clone lammps-input-files for water molecule template
-
-git clone https://github.com/simongravelle/lammps-input-files.gitgit clone https://github.com/simongravelle/lammps-input-files.git
-
-
-
-# Copy required files# Copy required files
-
-cp atomify/public/examples/sic/nanoparticle/sic_nanoparticle.data input_files/cp atomify/public/examples/sic/nanoparticle/sic_nanoparticle.data input_files/
-
-cp lammps-input-files/LAMMPS-molecules/H2O_TIP4P.txt input_files/cp lammps-input-files/LAMMPS-molecules/H2O_TIP4P.txt input_files/
-
-```# Copy more nanoparticles as needed
-
-cp atomify/public/examples/GO-nanoparticle/GO_nanoparticle.data input_files/
-
-### 3. Install Dependenciescp lammps-input-files/inputs/amorphous-carbon/amorphous_carbon.data input_files/
-
-```bash```
-
-# Python packages
-
-pip install numpy matplotlib scipy scikit-learn### 3. Install Dependencies
-
-```bash
-
-# LAMMPS with MPI (Ubuntu/Debian)# Python packages
-
-sudo apt-get install lammps-mpipip install numpy matplotlib scipy scikit-learn
-
-
-
-# Or build from source: https://docs.lammps.org/Build.html# LAMMPS with MPI (required for simulations)
-
-```# Ubuntu/Debian:
-
-sudo apt-get install lammps-mpi
-
-### 4. Verify Setup
-
-```bash# Or build from source: https://docs.lammps.org/Build.html
-
-python -c "import numpy, matplotlib; print('✓ Python OK')"```
-
-which mpirun && which lmp_mpi && echo "✓ LAMMPS OK"
-
-```### 4. Verify Setup
-
-```bash
-
-## 📁 Directory Structure# Test Python environment
-
-python -c "import numpy, matplotlib; print('✓ Python OK')"
-
-```
-
-solvent_effects/# Test LAMMPS
-
-├── README.md                          ⭐ START HEREwhich mpirun && which lmp_mpi && echo "✓ LAMMPS OK"
-
-├── START_HERE.md                      Quick overview
-
-├── VALIDATION_GUIDE.md                How to validate# Test basic simulation
-
-├── README_ENHANCED.md                 Complete manual (70+ examples)cd shell_scripts
-
-├── QUICK_REFERENCE_ENHANCED.sh        Command reference./run_solvation_study.sh SiC 500 10 4  # Quick 10 ps test
-
-│```
-
-├── shell_scripts/                     Simulation runners ⭐ KEY
-
-│   ├── run_solvation_study.sh        Advanced runner (RECOMMENDED)## 📁 Directory Structure
-
-│   ├── batch_run_solvation.sh        Batch processor
-
-│   └── run_simulation.sh             Legacy runner```
-
-│solvent_effects/
-
-├── analysis/                          Analysis scripts ⭐ KEY├── README.md                          (This file) ⭐ START HERE
-
-│   ├── validate_simulation.py         Validate quality (RECOMMENDED)├── START_HERE.md                      Quick overview & getting started
-
-│   ├── analyze_tip4p_simple.py        Thermodynamic analysis├── VALIDATION_GUIDE.md                How to validate simulations
-
-│   ├── analyze_solvation_advanced.py  Structural analysis├── ENHANCEMENT_SUMMARY.md             System improvements summary
-
-│   └── README.md                      Analysis guide├── README_ENHANCED.md                 Complete feature manual (70+ examples)
-
-│├── QUICK_REFERENCE_ENHANCED.sh        Command reference & examples
-
-├── input_files/                       Molecular templates ⭐ ESSENTIAL│
-
-│   ├── H2O_TIP4P.txt                 Water template (REQUIRED)├── shell_scripts/                     Simulation runners ⭐ KEY FILES
-
-│   └── sic_nanoparticle.data         SiC nanoparticle (from atomify)│   ├── run_solvation_study.sh        Advanced runner with full control (RECOMMENDED)
-
-││   ├── batch_run_solvation.sh        Batch processor for multiple NPs
-
-├── output/                            Simulation results│   ├── run_simulation.sh             Legacy runner (for reference)
-
-│   └── SiC_500w_10ps_.../            Example completed runs│   └── run_tip5p_simulation.sh       TIP5P runner (not recommended - slower)
-
-││
-
-└── docs/                              Detailed documentation├── analysis/                          Analysis & validation scripts ⭐ KEY FILES
-
-```│   ├── validate_simulation.py         Validates simulation quality (RECOMMENDED)
-
-│   ├── analyze_tip4p_simple.py        Thermodynamic analysis
-
-## 🚀 Quick Start│   ├── analyze_solvation_advanced.py  Structural analysis (RDF, coordination)
-
-│   ├── analyze_quick.py               Quick analysis
-
-### Test Simulation (30-45 min)│   └── README.md                      Analysis guide
-
-```bash│
-
-cd shell_scripts├── input_files/                       Molecular templates ⭐ ESSENTIAL
-
-./run_solvation_study.sh SiC 500 100 10│   ├── H2O_TIP4P.txt                 TIP4P water template (REQUIRED)
-
-```│   ├── sic_nanoparticle.data         SiC nanoparticle (from atomify)
-
-│   └── *.in, *.mol                   Legacy LAMMPS inputs
-
-### Validate Results│
-
-```bash├── output/                            Simulation results
-
-cd ../analysis│   ├── SiC_500w_10ps_.../            Example completed runs
-
-python validate_simulation.py ../output/SiC_500w_100ps_*/│   │   ├── trajectory.lammpstrj      Full trajectory for visualization
-
-```│   │   ├── log.lammps                LAMMPS thermodynamic log
-
-│   │   ├── final_config.data         Final structure
-
-## 🔧 Shell Scripts│   │   ├── final.restart             Restart file for continuation
-
-│   │   ├── validation_report.png     Validation quality plots
-
-### `run_solvation_study.sh` ⭐ RECOMMENDED│   │   └── validation_summary.txt    Quality report
-
-**Advanced simulation runner with full parameter control**│   └── ...
-
-│
-
-**What it does**:├── python_scripts/                    System setup utilities
-
-- Runs TIP4P/2005 water MD simulations  │   ├── prepare_tip4p_system.py        Create TIP4P systems
-
-- Full parameter control via flags│   ├── prepare_tip5p_system.py        Create TIP5P systems
-
-- Supports ps to ns scale│   └── ...
-
-- Manages equilibration and production│
-
-- Generates trajectory, logs, RDF└── docs/                              Detailed documentation
-
-- Provides progress tracking    ├── QUICK_START_SUCCESS.md         Successful setup guide
-
-    ├── TIP4P_SUCCESS.md               TIP4P water model info
-
-**Usage**:    ├── NANOPARTICLES_AVAILABLE.md     NP options
-
-```bash    └── *.md                           Previous guides & notes
-
-./run_solvation_study.sh NP_NAME NUM_WATERS TIME NUM_CORES [OPTIONS]```
-
-```
-
-## 🚀 Quick Start Examples
-
-**Examples**:
+**Structural analysis (RDF, coordination, H-bonds)**
 
 ```bash### Example 1: Simple 100 ps Test (30-45 min)
 
-# 100 ps test```bash
+**Usage**:
 
-./run_solvation_study.sh SiC 500 100 10cd shell_scripts
+```bash# 100 ps test```bash
 
+python analyze_solvation_advanced.py ../output/SiC_*/ --all --verbose
 
-
-# 5 ns production  # Run simulation
-
-./run_solvation_study.sh GO 1000 5 10 --ns --dump-freq 5000./run_solvation_study.sh SiC 500 100 10
+```./run_solvation_study.sh SiC 500 100 10cd shell_scripts
 
 
 
-# Custom settings# Then validate
-
-./run_solvation_study.sh SiC 500 1 10 --ns --temp 350 --timestep 2.0cd ../analysis
-
-```python validate_simulation.py ../output/SiC_500w_100ps_*/
+**Options**:
 
 ```
 
-**Flags**:
+--rdf               Calculate RDF# 5 ns production  # Run simulation
 
-```### Example 2: Production Run (1 nanosecond, 5-7 hours)
+--coordination      Calculate coordination
 
---timestep FLOAT      Timestep in fs (default: 1.0)```bash
+--hbonds            Analyze hydrogen bonds./run_solvation_study.sh GO 1000 5 10 --ns --dump-freq 5000./run_solvation_study.sh SiC 500 100 10
 
---temp FLOAT          Temperature in K (default: 300.0)cd shell_scripts
+--all               Run all analyses
 
---dump-freq INT       Trajectory dump frequency (default: 1000)
+--r-max FLOAT       Max RDF radius (default: 15.0)
 
---thermo-freq INT     Thermo output frequency (default: 500)# 1 ns simulation
+--r-bin FLOAT       RDF bin width (default: 0.1)
 
---box-size FLOAT      Box size in Å (default: auto)./run_solvation_study.sh SiC 500 1 10 --ns
+--skip INT          Skip first N frames# Custom settings# Then validate
 
---equilibration INT   Equilibration steps (default: 10000)
+--stride INT        Use every Nth frame
 
---production          Skip equilibration# Analyze
+--cutoff FLOAT      Coordination cutoff (default: 3.5)./run_solvation_study.sh SiC 500 1 10 --ns --temp 350 --timestep 2.0cd ../analysis
 
---ns                  Use nanosecond unitscd ../analysis
+--verbose           Verbose output
 
---restart FILE        Continue from restart filepython validate_simulation.py ../output/SiC_500w_1ns_*/
+``````python validate_simulation.py ../output/SiC_500w_100ps_*/
 
---output-dir DIR      Custom output directorypython analyze_tip4p_simple.py ../output/SiC_500w_1ns_*/
 
---label LABEL         Custom label for run```
 
---help                Show help
+---```
 
-```### Example 3: Batch Test All Nanoparticles
+
+
+## 💧 Water Model: TIP4P/2005**Flags**:
+
+
+
+- **Reference**: Abascal & Vega (2005). *J. Chem. Phys.* **123**, 234505. https://doi.org/10.1063/1.2121687```### Example 2: Production Run (1 nanosecond, 5-7 hours)
+
+- **Features**:
+
+  - 4-site model (O, 2H, 1 virtual site M)--timestep FLOAT      Timestep in fs (default: 1.0)```bash
+
+  - Rigid water (SHAKE constraints)
+
+  - Accurate density and RDF--temp FLOAT          Temperature in K (default: 300.0)cd shell_scripts
+
+  - Fast and stable
+
+  - Full electrostatics (PPPM)--dump-freq INT       Trajectory dump frequency (default: 1000)
+
+
+
+### Why TIP4P/2005?--thermo-freq INT     Thermo output frequency (default: 500)# 1 ns simulation
+
+✅ Accurate - Reproduces water properties  
+
+✅ Efficient - Only 4 sites (faster than TIP5P)  --box-size FLOAT      Box size in Å (default: auto)./run_solvation_study.sh SiC 500 1 10 --ns
+
+✅ Stable - Well-tested in LAMMPS  
+
+✅ Appropriate - Room temperature studies--equilibration INT   Equilibration steps (default: 10000)
+
+
+
+-----production          Skip equilibration# Analyze
+
+
+
+## 📥 Available Nanoparticles--ns                  Use nanosecond unitscd ../analysis
+
+
+
+### SiC (Silicon Carbide)--restart FILE        Continue from restart filepython validate_simulation.py ../output/SiC_500w_1ns_*/
+
+- **File**: `input_files/sic_nanoparticle.data`
+
+- **Source**: atomify/public/examples/sic/nanoparticle/--output-dir DIR      Custom output directorypython analyze_tip4p_simple.py ../output/SiC_500w_1ns_*/
+
+- **Size**: 8 atoms (testing)
+
+- **Command**: `./run_solvation_study.sh SiC 500 100 10`--label LABEL         Custom label for run```
+
+
+
+### GO (Graphene Oxide)--help                Show help
+
+- **File**: `input_files/GO_nanoparticle.data`
+
+- **Source**: atomify/public/examples/GO-nanoparticle/```### Example 3: Batch Test All Nanoparticles
+
+- **Size**: Large planar structure
+
+- **Command**: `./run_solvation_study.sh GO 1000 1 10 --ns````bash
+
+
+
+### Amorphous Carbon**Output files**:cd shell_scripts
+
+- **File**: `input_files/amorphous_carbon.data`
+
+- **Source**: lammps-input-files/inputs/amorphous-carbon/- `trajectory.lammpstrj` - Full trajectory
+
+- **Size**: Very large (15000+ atoms)
+
+- **Command**: `./run_solvation_study.sh amorphous 500 1 10 --ns`- `log.lammps` - Thermodynamic log# Test all NPs (SiC, GO, amorphous) quickly
+
+
+
+### Custom Nanoparticles- `final_config.data` - Final structure./batch_run_solvation.sh --all-nps --test --cores 10
 
 ```bash
 
-**Output files**:cd shell_scripts
+cp your_nanoparticle.data input_files/- `final.restart` - Restart file
 
-- `trajectory.lammpstrj` - Full trajectory
+./run_solvation_study.sh your_nanoparticle 500 100 10
 
-- `log.lammps` - Thermodynamic log# Test all NPs (SiC, GO, amorphous) quickly
+```- `rdf_np_water.dat` - RDF data# Validate all
 
-- `final_config.data` - Final structure./batch_run_solvation.sh --all-nps --test --cores 10
 
-- `final.restart` - Restart file
 
-- `rdf_np_water.dat` - RDF data# Validate all
+---- `np_com.dat` - NP center of masscd ../analysis
 
-- `np_com.dat` - NP center of masscd ../analysis
+
+
+## 🎯 Typical Workflowfor dir in ../output/*/; do
+
+
+
+### Phase 1: Validation (30 min)---    python validate_simulation.py "$dir"
+
+```bash
+
+cd shell_scriptsdone
+
+./run_solvation_study.sh SiC 500 100 10
+
+cd ../analysis### `batch_run_solvation.sh````
+
+python validate_simulation.py ../output/SiC_500w_100ps_*/
+
+```**Run multiple simulations in batch**
+
+
+
+### Phase 2: Structure (5-7 hours)## 🔧 Shell Scripts Guide
+
+```bash
+
+cd ../shell_scripts**Usage**:
+
+./batch_run_solvation.sh --all-nps --waters 500 --time 1 --ns --cores 10
+
+cd ../analysis```bash### `run_solvation_study.sh` ⭐ RECOMMENDED
 
 for dir in ../output/*/; do
 
----    python validate_simulation.py "$dir"
+    python validate_simulation.py "$dir"./batch_run_solvation.sh [OPTIONS]**Purpose**: Advanced simulation runner with full parameter control
 
-done
+    python analyze_tip4p_simple.py "$dir"
 
-### `batch_run_solvation.sh````
-
-**Run multiple simulations in batch**
-
-## 🔧 Shell Scripts Guide
-
-**Usage**:
-
-```bash### `run_solvation_study.sh` ⭐ RECOMMENDED
-
-./batch_run_solvation.sh [OPTIONS]**Purpose**: Advanced simulation runner with full parameter control
+done```
 
 ```
 
 **What it does**:
 
-**Examples**:- Runs TIP4P/2005 water MD simulations
+### Phase 3: Production (1-3 days)
 
-```bash- Accepts all parameters via flags (no hardcoding!)
+```bash**Examples**:- Runs TIP4P/2005 water MD simulations
 
-# Test all nanoparticles- Supports picosecond to nanosecond scale
+cd ../shell_scripts
 
-./batch_run_solvation.sh --all-nps --test --cores 10- Manages equilibration and production phases
+./batch_run_solvation.sh --all-nps --waters 1000 --time 5 --ns --cores 10```bash- Accepts all parameters via flags (no hardcoding!)
 
-- Generates trajectory, logs, and RDF data
+cd ../analysis
 
-# Production runs- Provides progress tracking and statistics
+for dir in ../output/*/; do# Test all nanoparticles- Supports picosecond to nanosecond scale
 
-./batch_run_solvation.sh --all-nps --production --cores 16
+    python validate_simulation.py "$dir"
 
-```**Basic usage**:
+    python analyze_solvation_advanced.py "$dir" --all --skip 100./batch_run_solvation.sh --all-nps --test --cores 10- Manages equilibration and production phases
 
-```bash
+done
+
+```- Generates trajectory, logs, and RDF data
+
+
+
+---# Production runs- Provides progress tracking and statistics
+
+
+
+## 📈 Performance./batch_run_solvation.sh --all-nps --production --cores 16
+
+
+
+### Requirements```**Basic usage**:
+
+- **Minimum**: 4 cores, 8 GB RAM
+
+- **Recommended**: 10-16 cores, 16 GB RAM  ```bash
+
+- **Production**: 32 cores, 32 GB RAM
 
 **Options**:./run_solvation_study.sh NP_NAME NUM_WATERS TIME NUM_CORES [OPTIONS]
 
-``````
+### Time Estimates (500 waters)
 
---all-nps            Run SiC, GO, amorphous carbon
+| Simulation | Cores | Runtime |``````
 
---nps LIST           Comma-separated list (e.g., SiC,GO)**Examples**:
+|------------|-------|---------|
+
+| 100 ps | 10 | 30-45 min |--all-nps            Run SiC, GO, amorphous carbon
+
+| 1 ns | 10 | 5-7 hours |
+
+| 5 ns | 16 | 1-2 days |--nps LIST           Comma-separated list (e.g., SiC,GO)**Examples**:
+
+| 10 ns | 16 | 3-5 days |
 
 --waters N           Number of waters (default: 500)```bash
 
---time T             Simulation time (default: 100)# 100 ps test with SiC
+### Optimization Tips
 
---ns                 Use nanosecond units./run_solvation_study.sh SiC 500 100 10
+- Use `--ns` for nanosecond runs (clearer)--time T             Simulation time (default: 100)# 100 ps test with SiC
+
+- Use `--dump-freq 5000` for long runs (save disk)
+
+- Use `--timestep 2.0` for faster runs (test first!)--ns                 Use nanosecond units./run_solvation_study.sh SiC 500 100 10
+
+- Scale cores to 8-32 (optimal range)
 
 --cores N            CPU cores (default: 8)
 
+---
+
 --test               Quick test mode (100 ps)# 5 ns production with GO
+
+## ✅ Success Criteria
 
 --production         Production mode (5 ns)./run_solvation_study.sh GO 1000 5 10 --ns --dump-freq 5000
 
+Simulation is GOOD when:
+
+- ✅ Temperature: Within ±20 K of 300 K```
+
+- ✅ Energy drift: < 5% (< 1% excellent)
+
+- ✅ RDF peak: 3-4 Å, g(r) > 1.5# Custom settings
+
+- ✅ RDF bulk: Approaches 1.0 at r > 10 Å
+
+- ✅ Trajectory: > 50 frames---./run_solvation_study.sh SiC 500 1 10 --ns --temp 350 --timestep 2.0
+
+- ✅ All output files present
+
 ```
 
-# Custom settings
-
----./run_solvation_study.sh SiC 500 1 10 --ns --temp 350 --timestep 2.0
-
-```
+---
 
 ## 📊 Analysis Scripts
 
+## 🐛 Troubleshooting
+
 **Supported options**:
 
-### `validate_simulation.py` ⭐ RECOMMENDED```
+### Simulation Won't Start
 
-**Validate if simulation is good quality**--timestep FLOAT     Timestep in fs (default: 1.0)
+```bash### `validate_simulation.py` ⭐ RECOMMENDED```
 
---temp FLOAT         Temperature in K (default: 300.0)
+which lmp_mpi    # Check LAMMPS installed
 
-**What it checks**:--dump-freq INT      Trajectory dump frequency (default: 1000)
+mpirun --version # Check MPI installed**Validate if simulation is good quality**--timestep FLOAT     Timestep in fs (default: 1.0)
 
-- File completeness--thermo-freq INT    Thermo output frequency (default: 500)
+ls input_files/* # Check input files exist
+
+```--temp FLOAT         Temperature in K (default: 300.0)
+
+
+
+### Energy Drift Too High**What it checks**:--dump-freq INT      Trajectory dump frequency (default: 1000)
+
+```bash
+
+# Increase equilibration- File completeness--thermo-freq INT    Thermo output frequency (default: 500)
+
+./run_solvation_study.sh SiC 500 100 10 --equilibration 50000
 
 - Temperature stability--box-size FLOAT     Box size in Å (default: auto)
 
-- Energy conservation--equilibration INT  Equilibration steps (default: 10000)
+# Smaller timestep
+
+./run_solvation_study.sh SiC 500 100 10 --timestep 0.5- Energy conservation--equilibration INT  Equilibration steps (default: 10000)
+
+```
 
 - RDF structure quality--production         Skip equilibration phase
 
-- Trajectory completeness--ns                 Use nanosecond time units
+### Simulation Too Slow
 
-- Overall quality with recommendations--restart FILE       Continue from restart file
+```bash- Trajectory completeness--ns                 Use nanosecond time units
 
---output-dir DIR     Custom output directory
+# Reduce dump frequency
+
+./run_solvation_study.sh SiC 500 100 10 --dump-freq 2000- Overall quality with recommendations--restart FILE       Continue from restart file
+
+
+
+# Use larger timestep--output-dir DIR     Custom output directory
+
+./run_solvation_study.sh SiC 500 100 10 --timestep 2.0
 
 **Usage**:--label LABEL        Custom label for run
 
-```bash--help               Show help
+# More cores
+
+./run_solvation_study.sh SiC 500 100 16```bash--help               Show help
+
+```
 
 python validate_simulation.py OUTPUT_DIR```
 
+---
 
+
+
+## 📚 Documentation
 
 # Examples**Output files** (in output/NP_name_Nw_time_timestamp/):
 
-python validate_simulation.py ../output/SiC_500w_100ps_*/- `trajectory.lammpstrj` - Full trajectory for visualization
+- **START_HERE.md** - Quick overview  
 
-for dir in ../output/*/; do python validate_simulation.py "$dir"; done- `log.lammps` - Thermodynamic data
+- **README_ENHANCED.md** - Complete manual (70+ examples)python validate_simulation.py ../output/SiC_500w_100ps_*/- `trajectory.lammpstrj` - Full trajectory for visualization
+
+- **VALIDATION_GUIDE.md** - How to validate simulations
+
+- **QUICK_REFERENCE_ENHANCED.sh** - Command referencefor dir in ../output/*/; do python validate_simulation.py "$dir"; done- `log.lammps` - Thermodynamic data
+
+- **docs/** - Detailed guides
 
 ```- `final_config.data` - Final structure
 
+---
+
 - `final.restart` - Restart for continuation
+
+## 📞 Support
 
 **Output**:- `rdf_np_water.dat` - Radial distribution function
 
-- `validation_report.png` - 3-panel plot- `np_com.dat` - NP center of mass trajectory
+Questions? Check:
 
-- `validation_summary.txt` - Quality report- `lammps_output.log` - Complete LAMMPS output
+1. **START_HERE.md** - Overview- `validation_report.png` - 3-panel plot- `np_com.dat` - NP center of mass trajectory
+
+2. **README_ENHANCED.md** - Manual
+
+3. **QUICK_REFERENCE_ENHANCED.sh** - Examples- `validation_summary.txt` - Quality report- `lammps_output.log` - Complete LAMMPS output
+
+4. **docs/** - Guides
 
 
+
+---
 
 **What's Good**:---
 
+## 🎯 Quick Start
 
+```bash
 
-| Metric | Good | Acceptable | Poor |### `batch_run_solvation.sh` 
+cd shell_scripts && ./run_solvation_study.sh SiC 500 100 10
+
+cd ../analysis && python validate_simulation.py ../output/SiC_500w_100ps_*/| Metric | Good | Acceptable | Poor |### `batch_run_solvation.sh` 
+
+```
 
 |--------|------|-----------|------|**Purpose**: Run multiple simulations in batch
+
+**Happy Simulating!** 🎉
 
 | Temperature | ±20 K | ±50 K | >50 K |
 
