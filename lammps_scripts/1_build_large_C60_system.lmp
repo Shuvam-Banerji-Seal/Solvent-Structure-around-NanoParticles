@@ -1,0 +1,183 @@
+# Build Large C60 Solvation System: 3 C60 + 2000 water molecules
+# Target density: ~0.99 g/cm³ at 300K, 1 bar
+# Box size: 40×40×40 Å³
+# Total atoms: ~6180 (180 C60 + 6000 water)
+# Usage: export OMP_NUM_THREADS=12 && lmp_mpi -in 1_build_large_C60_system.lmp
+
+units real
+dimension       3
+boundary        p p p
+atom_style      full  # For charges (TIP4P water)
+
+# =====================================================================
+# OpenMP PACKAGE for multi-threading
+# =====================================================================
+package         omp 0 neigh yes
+
+# Create box for 3 atom types (C60 carbon + water O + water H)
+# Box: 40×40×40 Å³ for ~0.99 g/cm³ density
+region          mybox block -20 20 -20 20 -20 20
+create_box      3 mybox bond/types 2 angle/types 1 &
+                extra/bond/per/atom 3 extra/angle/per/atom 6 extra/special/per/atom 12
+
+# Define styles (no coefficients yet)
+bond_style      harmonic
+angle_style     harmonic
+
+# Masses
+mass            1 12.011   # C (carbon in C60)
+mass            2 15.999   # O (oxygen in water)
+mass            3 1.008    # H (hydrogen in water)
+
+# Bond parameters
+bond_coeff      1 938.0 1.42      # C-C bonds in C60 (very stiff)
+bond_coeff      2 0.0 0.9572      # O-H bonds in water (rigid via SHAKE)
+
+# Angle parameters
+angle_coeff     1 0.0 104.52      # H-O-H angle in water (rigid via SHAKE)
+
+# Read TIP4P/2005 water molecule template
+# offset: atomtypes bondtypes angletypes dihedraltypes impropertypes
+molecule        h2omol H2O_TIP4P2005_fixed.mol offset 1 1 0 0 0
+
+# =====================================================================
+# CREATE 3 C60 PARTICLES AT DIFFERENT POSITIONS
+# =====================================================================
+print "Creating 3 C60 particles..."
+
+# C60 #1 at (-8, 0, 0)
+read_data       C60_bonded.data add append shift -8.0 0.0 0.0
+
+# C60 #2 at (8, 0, 0)  
+read_data       C60_bonded.data add append shift 8.0 0.0 0.0
+
+# C60 #3 at (0, 0, 10)
+read_data       C60_bonded.data add append shift 0.0 0.0 10.0
+
+# Group all C60 atoms (now 180 total)
+group           c60_group type 1
+
+# Verify C60 count
+variable        n_c60 equal count(c60_group)
+print           "C60 atoms created: ${n_c60} (expected 180)"
+
+# =====================================================================
+# CREATE WATER MOLECULES
+# =====================================================================
+print "Creating ~2000 water molecules..."
+
+# Create water molecules on lattice, avoiding C60 positions
+# Lattice spacing 3.1 Å gives reasonable packing
+lattice         sc 3.1
+create_atoms    0 box mol h2omol 45678 units box
+
+# Group water (O=type 2, H=type 3)
+group           water_group type 2 3
+group           water_O type 2
+group           water_H type 3
+
+# Count initial water
+variable        n_water_before equal count(water_group)
+print           "Water atoms before deletion: ${n_water_before}"
+
+# =====================================================================
+# SET UP FORCE FIELD
+# =====================================================================
+print "Setting up TIP4P/2005 force field..."
+
+# TIP4P/2005 requires special pair style with M-site (virtual 4th atom)
+# Syntax: pair_style lj/cut/tip4p/long/omp Otype Htype bond_type angle_type qdist cutoff
+pair_style      lj/cut/tip4p/long/omp 2 3 2 1 0.1546 12.0  # O=type2 H=type3 bond=2 angle=1
+kspace_style    pppm/tip4p 1.0e-4
+
+# LJ parameters for C60-water interactions
+pair_coeff      1 1 0.07 3.4      # C-C (fullerene): epsilon=0.07 kcal/mol, sigma=3.4 Å
+pair_coeff      1 2 0.05 3.2      # C-O (C60-water): epsilon=0.05 kcal/mol, sigma=3.2 Å
+pair_coeff      1 3 0.0 0.0       # C-H (no interaction)
+pair_coeff      2 2 0.1852 3.1589 # O-O (TIP4P/2005)
+pair_coeff      2 3 0.0 0.0       # O-H (no LJ, only Coulombic)
+pair_coeff      3 3 0.0 0.0       # H-H (no LJ, only Coulombic)
+
+# =====================================================================
+# SMART WATER DELETION
+# =====================================================================
+print "Removing overlapping water molecules..."
+
+# Delete water molecules with O within 7.0 Å of any C60 atom
+# "mol yes" ensures entire water molecule is deleted
+delete_atoms    overlap 7.0 water_O c60_group mol yes
+
+# Count final atoms
+variable        n_c60_final equal count(c60_group)
+variable        n_water_final equal count(water_group)
+variable        n_total equal count(all)
+variable        n_water_mol equal count(water_O)
+
+print           "========================================"
+print           "Large C60 Solvated System - Build Phase"
+print           "========================================"
+print           "C60 particles:        3"
+print           "C60 carbon atoms:     ${n_c60_final}"
+print           "Water molecules:      ${n_water_mol}"
+print           "Water atoms (O+H):    ${n_water_final}"
+print           "Total atoms:          ${n_total}"
+print           "Box: 40 x 40 x 40 Angstroms"
+print           "Expected density:     ~0.99 g/cm³"
+print           "========================================"
+
+# =====================================================================
+# APPLY SHAKE AND GENTLE WARM-UP
+# =====================================================================
+print "Applying SHAKE constraints to water..."
+
+# Apply SHAKE constraints to water molecules (rigid O-H bonds and H-O-H angle)
+fix             water_shake water_group shake 0.0001 20 0 b 2 a 1
+
+# Setup output
+thermo          50
+thermo_style    custom step temp pe ke etotal press density
+
+# Gentle warm-up from 1K to 50K over 500 steps (1 ps)
+print "Starting gentle warm-up (1K → 50K)..."
+timestep        2.0
+velocity        all create 1.0 87287 loop geom
+fix             gentle_warmup all nvt temp 1.0 50.0 100.0
+run             500
+unfix           gentle_warmup
+
+# Calculate properties
+variable        pe_warmup equal pe
+variable        rg_c60 equal gyration(c60_group)
+variable        dens equal density
+
+print           "========================================"
+print           "Gentle Warm-up Complete"
+print           "========================================"
+print           "Final PE:       ${pe_warmup} kcal/mol"
+print           "C60 Rg:         ${rg_c60} Å"
+print           "Density:        ${dens} g/cm³"
+print           "========================================"
+
+# =====================================================================
+# WRITE OUTPUT FILES
+# =====================================================================
+print "Writing output files..."
+
+# Write data file with pair coefficients
+write_data      large_C60_solvated.data pair ij
+
+# Write XYZ for visualization
+write_dump      all xyz large_C60_solvated_initial.xyz modify element C O H
+
+print           "========================================"
+print           "Build Complete!"
+print           "========================================"
+print           "Output files:"
+print           "  - large_C60_solvated.data (LAMMPS data file)"
+print           "  - large_C60_solvated_initial.xyz (XYZ for visualization)"
+print           ""
+print           "Next steps:"
+print           "  1. Verify atom counts match expected values"
+print           "  2. Visualize in OVITO/VMD to check C60 placement"
+print           "  3. Run equilibration with 2_equilibrate_version_2.lmp"
+print           "========================================"
