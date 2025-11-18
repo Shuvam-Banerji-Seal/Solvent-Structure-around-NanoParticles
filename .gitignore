@@ -5,11 +5,8 @@ __pycache__/
 .uv/
 
 # LAMMPS and generated data
-data/*.lammpstrj
-data/*.dcd
-data/*.pdb
+# Note: Large LAMMPS data files in analysis/ are tracked by Git LFS (.gitattributes)
 data/*.data
-data/*.lammpstrj
 experiments/
 outputs/
 log.lammps
