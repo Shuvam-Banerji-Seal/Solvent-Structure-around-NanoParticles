@@ -1,0 +1,34 @@
+# Water molecule for TIP4P/2005 (3-atom template, M-site handled by LAMMPS)
+# The M-site virtual atom is created automatically by pair_style lj/cut/tip4p/long
+# Reference: LAMMPS TIP4P documentation
+
+3 atoms
+2 bonds
+1 angles
+
+Coords
+
+1 0.000000 0.000000 0.000000  # O
+2 0.957200 0.000000 0.000000  # H
+3 -0.239987 0.926627 0.000000  # H
+
+Types
+
+1 1  # O (oxygen type)
+2 2  # H (hydrogen type)
+3 2  # H (hydrogen type)
+
+Charges
+
+1 -1.1128  # O (charge assigned to M-site by LAMMPS)
+2  0.5564  # H
+3  0.5564  # H
+
+Bonds
+
+1 1 1 2  # O-H
+2 1 1 3  # O-H
+
+Angles
+
+1 1 2 1 3  # H-O-H

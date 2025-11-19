@@ -22,11 +22,11 @@ create_box      3 mybox bond/types 2 angle/types 1 &
 
 # Read bonded C60 (60 atoms with 90 bonds, type 1)
 # Use "add merge" to merge atom types properly
-read_data       C60_bonded.data add merge
+read_data       ../data_files/C60_bonded.data add merge
 
 # Read TIP4P/2005 water molecule template
 # offset: atomtypes bondtypes angletypes dihedraltypes impropertypes
-molecule        h2omol H2O_TIP4P2005_fixed.mol offset 1 1 0 0 0
+molecule        h2omol ../data_files/H2O_TIP4P2005_fixed.mol offset 1 1 0 0 0
 
 # Define styles (no coefficients yet)
 bond_style      harmonic
