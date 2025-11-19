@@ -1,1 +1,0 @@
-# How does solvation structure change around a hydrophobic vs. hydrophilic nanoparticle? (MD part: Simulate spherical solutes (LJ spheres with different ε) in water compute RDFs, hydration numbers.
