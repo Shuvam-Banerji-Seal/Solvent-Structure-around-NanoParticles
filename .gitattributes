@@ -1,5 +1,4 @@
 # Git LFS configuration for large files
-
 # Epsilon folders - all files
 analysis/epsilon_0.0/** filter=lfs diff=lfs merge=lfs -text
 analysis/epsilon_0.05/** filter=lfs diff=lfs merge=lfs -text
@@ -7,27 +6,25 @@ analysis/epsilon_0.10/** filter=lfs diff=lfs merge=lfs -text
 analysis/epsilon_0.15/** filter=lfs diff=lfs merge=lfs -text
 analysis/epsilon_0.20/** filter=lfs diff=lfs merge=lfs -text
 analysis/epsilon_0.25/** filter=lfs diff=lfs merge=lfs -text
-
 # Analysis folder files (except Python scripts)
 # LAMMPS trajectory files
 analysis/**/*.dcd filter=lfs diff=lfs merge=lfs -text
 analysis/**/*.lammpstrj filter=lfs diff=lfs merge=lfs -text
-
 # Restart files
 analysis/**/*.restart filter=lfs diff=lfs merge=lfs -text
-
 # PPM files
 analysis/**/*.ppm filter=lfs diff=lfs merge=lfs -text
-
 # Molecular structure files
 analysis/**/*.mol filter=lfs diff=lfs merge=lfs -text
 analysis/**/*.pdb filter=lfs diff=lfs merge=lfs -text
-
 # Data files in analysis/data
 analysis/data/** filter=lfs diff=lfs merge=lfs -text
-
 # Plot files
 analysis/plots/** filter=lfs diff=lfs merge=lfs -text
-
 # Videos
 analysis/videos/** filter=lfs diff=lfs merge=lfs -text
+analysis/epsilon_*/**/*.ppm filter=lfs diff=lfs merge=lfs -text
+analysis/epsilon_*/**/*.data filter=lfs diff=lfs merge=lfs -text
+analysis/epsilon_*/**/*.restart filter=lfs diff=lfs merge=lfs -text
+analysis/epsilon_*/**/*.dcd filter=lfs diff=lfs merge=lfs -text
+analysis/epsilon_*/**/*.lammpstrj filter=lfs diff=lfs merge=lfs -text

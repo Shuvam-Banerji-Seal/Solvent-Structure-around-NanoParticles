@@ -10,7 +10,9 @@ data/*.data
 experiments/
 outputs/
 log.lammps
-*.log
+# Only ignore log files in root and data directories, not in presentation/
+/*.log
+data/*.log
 
 # PACKMOL
 packmol-21.1.1/
@@ -21,18 +23,19 @@ packmol/
 .vmd_history
 
 # LaTeX
+# Keep PDF and TEX files in presentation folder, only ignore build artifacts
 *.aux
 *.bbl
 *.blg
 *.fdb_latexmk
 *.fls
-*.log
-*.nav
-*.out
-*.snm
-*.synctex.gz
-*.toc
-*.vrb
+presentation/*.log
+presentation/*.nav
+presentation/*.out
+presentation/*.snm
+presentation/*.synctex.gz
+presentation/*.toc
+presentation/*.vrb
 *.dvi
 *.ps
 
@@ -49,6 +52,7 @@ Thumbs.db
 *.tar.gz
 *.zip
 *.7z
+*.tar
 
 # Cache directories
 .cache/
