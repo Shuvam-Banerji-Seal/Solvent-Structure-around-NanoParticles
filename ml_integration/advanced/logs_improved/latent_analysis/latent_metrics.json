@@ -1,0 +1,10 @@
+{
+  "pca_explained_variance": [
+    0.9183370471000671,
+    0.06720568239688873
+  ],
+  "response_linearity_r2": -14664.970279083838,
+  "response_correlation": 0.9755180910097988,
+  "mean_smoothness": 97.3694076538086,
+  "std_smoothness": 30.372331619262695
+}

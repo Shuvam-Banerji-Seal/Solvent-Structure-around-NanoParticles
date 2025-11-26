@@ -1,0 +1,206 @@
+# LAMMPS Restart Script: Production MD from NPT Checkpoint
+# Purpose: Restart only the production MD stage after NPT equilibration
+# Created: Auto-generated to protect against production MD failures
+#
+# This script continues from npt_equilibration_complete.restart
+# Use this if production MD crashes and you don't want to redo NPT equilibration
+#
+# It will:
+#   1. Resume from NPT equilibration checkpoint
+#   2. Run production MD (4000 ps)
+#   3. Collect all RDF, MSD, and trajectory data
+
+# ===== INITIALIZATION =====
+units real
+atom_style full
+boundary p p p
+atom_modify map array
+
+# ===== COMMUNICATION =====
+comm_modify cutoff 18.0
+
+# ===== READ RESTART FILE =====
+# This continues from the end of NPT equilibration
+read_restart npt_equilibration_complete.restart
+
+# ===== FORCE FIELD (GPU-accelerated) =====
+pair_style lj/cut/tip4p/long/gpu 2 3 2 1 0.1546 12.0
+kspace_style pppm/tip4p 1.0e-4
+kspace_modify mesh 50 50 50
+kspace_modify order 5
+kspace_modify force/disp/real 0.8
+
+bond_style harmonic
+angle_style harmonic
+
+# ===== PAIR COEFFICIENTS =====
+# Get epsilon_co from command line
+variable epsilon_co equal ${EPSILON_CO}
+
+pair_coeff 1 1 0.07 3.4            # C-C
+pair_coeff 2 2 0.1852 3.1589       # O-O
+pair_coeff 3 3 0.0 0.0             # H-H
+pair_coeff 1 2 ${epsilon_co} 3.2   # C-O (variable)
+pair_coeff 1 3 0.0 0.0             # C-H
+pair_coeff 2 3 0.0 0.0             # O-H
+
+# Bond and angle coefficients
+bond_coeff 1 938.0 1.42         # C-C bonds in C60
+bond_coeff 2 0.0 0.9572         # O-H bonds (SHAKE controlled)
+angle_coeff 1 0.0 104.52        # H-O-H angle (SHAKE controlled)
+
+# ===== SETTINGS =====
+neighbor 2.0 bin
+neigh_modify delay 5 every 1 check yes
+
+# Define groups
+group carbon type 1
+group water type 2 3
+group oxygen type 2
+group hydrogen type 3
+
+# Apply SHAKE
+fix myshk water shake 0.0001 20 0 b 2 a 1
+
+# Define thermodynamic variables
+variable temp equal c_thermo_temp
+variable press equal c_thermo_press
+variable pe equal pe
+variable ke equal ke
+variable etotal equal etotal
+variable vol equal vol
+variable dens equal density
+
+thermo_style custom step temp press vol pe ke etotal density
+thermo 1000
+
+timestep 2.0
+
+print "════════════════════════════════════════════════════════════════════════════"
+print "RESTARTING FROM NPT EQUILIBRATION CHECKPOINT"
+print "  Epsilon (O-C): ${epsilon_co} kcal/mol"
+print "  Continuing from: NPT equilibration complete (~1200 ps total)"
+print "  Remaining: Production MD (4000 ps)"
+print "════════════════════════════════════════════════════════════════════════════"
+print ""
+
+# Verify system state
+variable current_dens equal density
+variable current_vol equal vol
+variable current_temp equal temp
+print "Current system state:"
+print "  Temperature: ${current_temp} K"
+print "  Density:     ${current_dens} g/cm³"
+print "  Volume:      ${current_vol} Å³"
+print ""
+
+#==============================================================================
+# PRODUCTION MD (4000 ps = 4 ns)
+#==============================================================================
+print ""
+print "===== PRODUCTION MD (4000 ps = 4 ns, GPU) ====="
+print "Main data collection phase - RDF, MSD, trajectories"
+print ""
+print "Output files:"
+print "  - production.lammpstrj (every 1 ps)"
+print "  - production.dcd (every 0.5 ps for smooth visualization)"
+print "  - production_thermo.dat (detailed thermodynamics every 1 ps)"
+print "  - production_detailed_thermo.dat (every 0.1 ps)"
+print "  - rdf_CO.dat (C60-water RDF computed on-the-fly)"
+print "  - rdf_CC.dat (C60-C60 RDF)"
+print "  - rdf_OO.dat (water-water RDF)"
+print "  - msd_water.dat (water diffusion)"
+print ""
+
+# Continue NPT at 300K, 1 atm
+fix mynpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 2000.0
+
+# Main trajectory dump (every 1 ps for analysis)
+dump prod_traj all custom 1000 production.lammpstrj id type xu yu zu
+dump_modify prod_traj sort id
+
+# DCD dump (every 0.5 ps for smooth visualization)
+dump prod_dcd all dcd 500 production.dcd
+dump_modify prod_dcd unwrap yes
+
+# Detailed thermodynamics (every 1 ps)
+fix thermo_avg all ave/time 100 10 1000 v_epsilon_co v_temp v_press v_pe v_ke v_etotal v_vol v_dens &
+    file production_thermo.dat
+
+# Very detailed thermodynamics (every 0.1 ps for fluctuation analysis)
+fix thermo_detailed all ave/time 10 10 100 v_temp v_press v_pe v_ke v_vol v_dens &
+    file production_detailed_thermo.dat
+
+# Compute RDFs on-the-fly (C60-water, C60-C60, water-water)
+compute rdf_CO all rdf 150 1 2  # C-O pairs (C60-water)
+compute rdf_CC all rdf 150 1 1  # C-C pairs (C60-C60)
+compute rdf_OO all rdf 150 2 2  # O-O pairs (water-water)
+
+# Average RDFs over production run (every 10 ps)
+# FIXED: Explicit column indexing (RDF outputs [1]=r, [2]=g(r), [3]=coordination)
+fix rdf_CO_avg all ave/time 1000 10 10000 c_rdf_CO[1] c_rdf_CO[2] c_rdf_CO[3] file rdf_CO.dat mode vector
+fix rdf_CC_avg all ave/time 1000 10 10000 c_rdf_CC[1] c_rdf_CC[2] c_rdf_CC[3] file rdf_CC.dat mode vector
+fix rdf_OO_avg all ave/time 1000 10 10000 c_rdf_OO[1] c_rdf_OO[2] c_rdf_OO[3] file rdf_OO.dat mode vector
+
+# Compute MSD for water oxygen (diffusion analysis)
+compute msd_water oxygen msd
+# FIXED: MSD compute outputs: [1]=dx², [2]=dy², [3]=dz², [4]=total r²
+fix msd_avg all ave/time 100 10 1000 c_msd_water[1] c_msd_water[2] c_msd_water[3] c_msd_water[4] file msd_water.dat
+
+# Progress monitoring
+print ""
+print "Production MD starting..."
+print "Target: 2,000,000 steps (4000 ps)"
+print ""
+
+# Run production (4000 ps = 2,000,000 steps)
+run 2000000
+
+# Cleanup
+undump prod_traj
+undump prod_dcd
+unfix mynpt
+unfix thermo_avg
+unfix thermo_detailed
+unfix rdf_CO_avg
+unfix rdf_CC_avg
+unfix rdf_OO_avg
+unfix msd_avg
+
+write_restart production_complete.restart
+write_data production_complete.data
+
+print ""
+print "════════════════════════════════════════════════════════════════════════════"
+print "PRODUCTION MD COMPLETE!"
+print "════════════════════════════════════════════════════════════════════════════"
+print ""
+print "Simulation Summary:"
+print "  Production run: 4000 ps (4 ns)"
+print "  Epsilon: ${epsilon_co} kcal/mol"
+print ""
+
+# Final measurements
+variable final_temp equal temp
+variable final_press equal press
+variable final_dens equal density
+variable final_vol equal vol
+
+print "Final State:"
+print "  Temperature: ${final_temp} K"
+print "  Pressure:    ${final_press} atm"
+print "  Density:     ${final_dens} g/cm³"
+print "  Volume:      ${final_vol} Å³"
+print ""
+print "Data files created:"
+print "  ✓ production_complete.restart"
+print "  ✓ production_complete.data"
+print "  ✓ production.lammpstrj (2000 frames)"
+print "  ✓ production.dcd (4000 frames)"
+print "  ✓ rdf_CO.dat, rdf_CC.dat, rdf_OO.dat"
+print "  ✓ msd_water.dat"
+print "  ✓ production_thermo.dat"
+print "  ✓ production_detailed_thermo.dat"
+print ""
+print "✅ READY FOR ANALYSIS!"
+print "════════════════════════════════════════════════════════════════════════════"

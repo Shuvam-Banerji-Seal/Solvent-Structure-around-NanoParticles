@@ -1,0 +1,45 @@
+# Python ML dependencies for nanoparticle solvation study
+# Compatible with Python 3.13.4
+
+# Core scientific computing
+numpy>=1.26.0
+pandas>=2.1.0
+scipy>=1.11.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+
+# Deep Learning (PyTorch with CUDA 12.x support)
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+
+# Gaussian Processes
+gpytorch>=1.11
+
+# Molecular Dynamics Analysis
+MDAnalysis>=2.6.0
+mdtraj>=1.9.9
+
+# Visualization
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.17.0
+streamlit>=1.30.0
+
+# Jupyter for notebooks
+jupyter>=1.0.0
+ipykernel>=6.25.0
+
+# Utilities
+tqdm>=4.66.0
+pyyaml>=6.0
+h5py>=3.10.0
+
+# Experiment tracking (optional)
+wandb>=0.16.0
+
+# Code quality
+black>=23.0.0
+flake8>=6.1.0

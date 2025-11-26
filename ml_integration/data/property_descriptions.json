@@ -1,0 +1,39 @@
+{
+  "description": "Training features extracted from MD simulations",
+  "n_samples": 11,
+  "n_features": 22,
+  "epsilon_range": [
+    0.0,
+    0.5
+  ],
+  "features": {
+    "thermodynamic": [
+      "temp_mean",
+      "temp_std",
+      "press_mean",
+      "press_std",
+      "density_mean",
+      "density_std",
+      "pe_mean",
+      "pe_std",
+      "vol_mean",
+      "vol_std"
+    ],
+    "rdf_co": [
+      "rdf_co_peak1_position",
+      "rdf_co_peak1_height",
+      "rdf_co_peak2_position",
+      "rdf_co_peak2_height",
+      "rdf_co_first_minimum",
+      "rdf_co_coordination_number"
+    ],
+    "rdf_oo": [
+      "rdf_oo_peak1_position",
+      "rdf_oo_peak1_height",
+      "rdf_oo_peak2_position",
+      "rdf_oo_peak2_height",
+      "rdf_oo_first_minimum",
+      "rdf_oo_coordination_number"
+    ]
+  }
+}

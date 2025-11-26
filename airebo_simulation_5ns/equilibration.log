@@ -1,0 +1,1 @@
+ERROR on proc 0: Cannot open input script /2_equilibrium_version_2_w_minimization_small.lmp: No such file or directory (src/lammps.cpp:565)
