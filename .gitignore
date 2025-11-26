@@ -66,4 +66,5 @@ Thumbs.db
 .vscode/
 .idea/
 *.sublime-project
-*.sublime-workspace
+*.sublime-workspacedata_files/potentials/
+data_files/potentials/

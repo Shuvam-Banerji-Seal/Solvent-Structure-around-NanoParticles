@@ -1,0 +1,6 @@
+units real
+atom_style full
+region box block -10 10 -10 10 -10 10
+create_box 3 box bond/types 2 angle/types 1 extra/bond/per/atom 2 extra/special/per/atom 10
+molecule h2omol ../data_files/H2O_TIP4P2005_fixed.mol
+print "Success"

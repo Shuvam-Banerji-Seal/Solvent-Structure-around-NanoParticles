@@ -1,0 +1,331 @@
+LAMMPS (22 Jul 2025 - Update 1)
+  using 12 OpenMP thread(s) per MPI task
+using multi-threaded neighbor list subroutines
+Created orthogonal box = (-30 -30 -30) to (30 30 30)
+  1 by 1 by 1 MPI processor grid
+Reading data file ...
+  orthogonal box = (-30 -30 -30) to (30 30 30)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  60 atoms
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     0 = max # of 1-2 neighbors
+     0 = max # of 1-3 neighbors
+     0 = max # of 1-4 neighbors
+   201 = max # of special neighbors
+  special bonds CPU = 0.000 seconds
+  read_data CPU = 0.007 seconds
+Read molecule template h2omol:
+# Water molecule for TIP4P/2005 (3-atom template, M-site handled by LAMMPS)
+  1 molecules
+  0 fragments
+  0 bodies
+  3 atoms with max type 3
+  2 bonds with max type 2
+  1 angles with max type 1
+  0 dihedrals with max type 0
+  0 impropers with max type 0
+Reading airebo potential file ../data_files/potentials/CH.airebo with DATE: 2011-10-25
+60 atoms in group c60_group
+Lattice spacing in x,y,z = 3.2 3.2 3.2
+Created 20577 atoms
+  using box units in orthogonal box = (-30 -30 -30) to (30 30 30)
+  create_atoms CPU = 0.027 seconds
+20577 atoms in group water_group
+6859 atoms in group water_O
+13718 atoms in group water_H
+System init for delete_atoms ...
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.23013595
+  grid = 30 30 30
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0010907259
+  estimated relative force accuracy = 7.5746723e-05
+  using double precision FFTW3
+  3d grid and FFT values/proc = 50653 27000
+WARNING: Using a manybody potential with bonds/angles/dihedrals and special_bond exclusions (src/pair.cpp:250)
+WARNING: Communication cutoff 0 is shorter than a bond length based estimate of 3.5. This may lead to errors. (src/comm.cpp:743)
+WARNING: Increasing communication cutoff to 15.1118 for TIP4P pair style (src/KSPACE/pair_lj_cut_tip4p_long.cpp:497)
+Hybrid pair style last /omp style lj/cut/tip4p/long/omp
+Last active /omp style is pair_style lj/cut/tip4p/long/omp
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14.3092
+  ghost atom cutoff = 15.1118
+  binsize = 7.1546, bins = 9 9 9
+  5 neighbor lists, perpetual/occasional/extra = 4 1 0
+  (1) command delete_atoms, occasional, copy from (5)
+      attributes: full, newton on, omp
+      pair build: copy
+      stencil: none
+      bin: none
+  (2) pair airebo, perpetual, skip from (5)
+      attributes: full, newton on, ghost, omp
+      pair build: skip/ghost/omp
+      stencil: none
+      bin: none
+  (3) pair lj/cut/tip4p/long/omp, perpetual, skip from (4)
+      attributes: half, newton on, omp
+      pair build: skip/omp
+      stencil: none
+      bin: none
+  (4) neighbor class addition, perpetual
+      attributes: half, newton on, omp
+      pair build: half/bin/newton/omp
+      stencil: half/bin/3d
+      bin: standard
+  (5) neighbor class addition, perpetual
+      attributes: full, newton on, ghost, omp
+      pair build: full/bin/ghost/omp
+      stencil: full/ghost/bin/3d
+      bin: standard
+WARNING: Ignoring 'compress yes' for molecular system (src/delete_atoms.cpp:141)
+Deleted 108 atoms, new total = 20529
+Deleted 72 bonds, new total = 13646
+Deleted 36 angles, new total = 6823
+========================================
+C60 Solvated System - Build Phase
+========================================
+C60 carbon atoms: 60
+Water oxygen atoms: 20469
+Total atoms: 20529
+========================================
+Minimizing System...
+========================================
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.23013508
+  grid = 30 30 30
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0010878684
+  estimated relative force accuracy = 7.5548276e-05
+  using double precision FFTW3
+  3d grid and FFT values/proc = 50653 27000
+WARNING: Using a manybody potential with bonds/angles/dihedrals and special_bond exclusions (src/pair.cpp:250)
+Hybrid pair style last /omp style lj/cut/tip4p/long/omp
+Last active /omp style is pair_style lj/cut/tip4p/long/omp
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14.3092
+  ghost atom cutoff = 15.1118
+  binsize = 7.1546, bins = 9 9 9
+  4 neighbor lists, perpetual/occasional/extra = 4 0 0
+  (1) pair airebo, perpetual, skip from (4)
+      attributes: full, newton on, ghost, omp
+      pair build: skip/ghost/omp
+      stencil: none
+      bin: none
+  (2) pair lj/cut/tip4p/long/omp, perpetual, skip from (3)
+      attributes: half, newton on, omp
+      pair build: skip/omp
+      stencil: none
+      bin: none
+  (3) neighbor class addition, perpetual
+      attributes: half, newton on, omp
+      pair build: half/bin/newton/omp
+      stencil: half/bin/3d
+      bin: standard
+  (4) neighbor class addition, perpetual
+      attributes: full, newton on, ghost, omp
+      pair build: full/bin/ghost/omp
+      stencil: full/ghost/bin/3d
+      bin: standard
+Setting up cg style minimization ...
+  Unit style    : metal
+  Current step  : 0
+Per MPI rank memory allocation (min/avg/max) = 366.9 | 366.9 | 366.9 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+         0   0              2045.5084      9.0943624e-09  2045.5084      96303.791    
+       304   0             -4785.7184      257.76167     -4527.9567     -6994.564     
+Loop time of 86.5622 on 12 procs for 304 steps with 20529 atoms
+
+609.5% CPU use with 1 MPI tasks x 12 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+      2045.50838398188   -4527.5126527867  -4527.95672439009
+  Force two-norm initial, final = 1814.1509 5.5477923
+  Force max component initial, final = 397.99565 1.0603409
+  Final line search alpha, max atom move = 0.061051133 0.064735015
+  Iterations, force evaluations = 304 520
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 59.622     | 59.622     | 59.622     |   0.0 | 68.88
+Bond    | 0.8067     | 0.8067     | 0.8067     |   0.0 |  0.93
+Kspace  | 14.512     | 14.512     | 14.512     |   0.0 | 16.76
+Neigh   | 10.016     | 10.016     | 10.016     |   0.0 | 11.57
+Comm    | 0.36059    | 0.36059    | 0.36059    |   0.0 |  0.42
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0.75845    | 0.75845    | 0.75845    |   0.0 |  0.88
+Other   |            | 0.4856     |            |       |  0.56
+
+Nlocal:          20529 ave       20529 max       20529 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:          51437 ave       51437 max       51437 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 0
+Ave neighs/atom = 0
+Ave special neighs/atom = 1.9941546
+Neighbor list builds = 13
+Dangerous builds = 0
+Finding SHAKE clusters ...
+       0 = # of size 2 clusters
+       0 = # of size 3 clusters
+       0 = # of size 4 clusters
+    6823 = # of frozen angles
+  find clusters CPU = 0.009 seconds
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.23013508
+  grid = 30 30 30
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0010878684
+  estimated relative force accuracy = 7.5548276e-05
+  using double precision FFTW3
+  3d grid and FFT values/proc = 50653 27000
+WARNING: Using a manybody potential with bonds/angles/dihedrals and special_bond exclusions (src/pair.cpp:250)
+Hybrid pair style last /omp style lj/cut/tip4p/long/omp
+Last active /omp style is pair_style lj/cut/tip4p/long/omp
+Setting up Verlet run ...
+  Unit style    : metal
+  Current step  : 0
+  Time step     : 0.001
+Per MPI rank memory allocation (min/avg/max) = 367.9 | 367.9 | 367.9 Mbytes
+   Step          Temp          PotEng         KinEng         TotEng         Press     
+         0   1             -4785.7184      1.7715103     -4783.9469     -5738.4849    
+       100   8.2461562     -4296.7958      14.608151     -4282.1877     -5174.3428    
+       200   11.324188     -4302.4123      20.060915     -4282.3514     -5708.8107    
+       300   14.274713     -4307.5774      25.287802     -4282.2896     -5275.6329    
+       400   16.620872     -4311.3078      29.444046     -4281.8637     -4931.0487    
+       500   18.629338     -4314.2673      33.002065     -4281.2652     -4870.5028    
+       600   20.534134     -4316.7784      36.37643      -4280.402      -4814.9637    
+       700   22.573749     -4319.3331      39.989628     -4279.3435     -4661.4572    
+       800   23.551289     -4319.8008      41.72135      -4278.0795     -4530.6946    
+       900   25.461073     -4321.731       45.104553     -4276.6264     -4464.7871    
+      1000   27.605406     -4323.8704      48.903261     -4274.9672     -4376.6427    
+      1100   29.160889     -4324.7039      51.658815     -4273.0451     -4222.7628    
+      1200   30.860357     -4325.6813      54.66944      -4271.0118     -4296.9477    
+      1300   32.561644     -4326.4629      57.683287     -4268.7796     -4159.4437    
+      1400   34.036405     -4326.6305      60.295842     -4266.3346     -4118.5287    
+      1500   36.242194     -4327.9016      64.203419     -4263.6982     -4197.5486    
+      1600   37.017055     -4326.4054      65.576094     -4260.8293     -4040.796     
+      1700   38.843172     -4326.6518      68.811079     -4257.8407     -4068.6082    
+      1800   40.040775     -4325.5629      70.932644     -4254.6303     -3784.439     
+      1900   41.265717     -4324.3577      73.102643     -4251.2551     -3889.8291    
+      2000   43.770504     -4325.2216      77.539899     -4247.6817     -3922.5974    
+      2100   45.003682     -4323.511       79.724485     -4243.7865     -3856.2084    
+      2200   46.223935     -4321.6653      81.886176     -4239.7791     -3719.0208    
+      2300   48.001029     -4320.6346      85.034317     -4235.6003     -3902.8396    
+      2400   49.408808     -4318.6534      87.528212     -4231.1252     -3887.6314    
+      2500   51.975169     -4318.5431      92.074547     -4226.4686     -3680.4921    
+      2600   54.638016     -4318.3255      96.791808     -4221.5337     -3503.0875    
+      2700   55.751189     -4315.099       98.763805     -4216.3352     -3527.0201    
+      2800   57.427488     -4312.7007      101.73339     -4210.9673     -3597.0743    
+      2900   59.707209     -4311.1588      105.77194     -4205.3869     -3563.6009    
+      3000   61.917372     -4309.2042      109.68726     -4199.5169     -3521.696     
+      3100   63.969152     -4306.6887      113.32201     -4193.3667     -3414.3296    
+      3200   65.896709     -4303.7056      116.7367      -4186.9689     -3143.9557    
+      3300   67.483592     -4299.796       119.54788     -4180.2481     -3191.1441    
+      3400   71.369737     -4299.7381      126.43222     -4173.3059     -3036.9991    
+      3500   73.086621     -4295.5377      129.4737      -4166.0639     -3101.4809    
+      3600   75.614148     -4292.4866      133.95124     -4158.5354     -2883.1069    
+      3700   78.111452     -4289.0857      138.37524     -4150.7104     -2984.8135    
+      3800   80.426025     -4285.0602      142.47553     -4142.5846     -2823.6183    
+      3900   82.952896     -4281.0863      146.95191     -4134.1344     -2954.4966    
+      4000   86.558634     -4278.7211      153.33951     -4125.3816     -2676.8834    
+      4100   88.77836      -4273.5938      157.27178     -4116.3221     -2595.9201    
+      4200   91.261378     -4268.571       161.67047     -4106.9006     -2656.0701    
+      4300   94.328839     -4264.2458      167.10451     -4097.1413     -2490.2257    
+      4400   96.995101     -4258.9258      171.82782     -4087.098      -2435.432     
+      4500   100.10253     -4253.9408      177.33267     -4076.6082     -2485.6181    
+      4600   103.69042     -4249.4528      183.68865     -4065.7642     -2479.6885    
+      4700   106.50719     -4243.2347      188.67858     -4054.5561     -2388.1352    
+      4800   110.74214     -4239.1019      196.18085     -4042.9211     -2337.9788    
+      4900   113.62937     -4232.151       201.2956      -4030.8554     -2063.9686    
+      5000   117.94566     -4227.4347      208.94195     -4018.4928     -2031.0833    
+Loop time of 769.231 on 12 procs for 5000 steps with 20529 atoms
+
+Performance: 0.562 ns/day, 42.735 hours/ns, 6.500 timesteps/s, 133.438 katom-step/s
+508.2% CPU use with 1 MPI tasks x 12 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 501.68     | 501.68     | 501.68     |   0.0 | 65.22
+Bond    | 0.018929   | 0.018929   | 0.018929   |   0.0 |  0.00
+Kspace  | 161.58     | 161.58     | 161.58     |   0.0 | 21.01
+Neigh   | 73.429     | 73.429     | 73.429     |   0.0 |  9.55
+Comm    | 3.819      | 3.819      | 3.819      |   0.0 |  0.50
+Output  | 0.021775   | 0.021775   | 0.021775   |   0.0 |  0.00
+Modify  | 27.942     | 27.942     | 27.942     |   0.0 |  3.63
+Other   |            | 0.737      |            |       |  0.10
+
+Nlocal:          20529 ave       20529 max       20529 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:          50192 ave       50192 max       50192 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 0
+Ave neighs/atom = 0
+Ave special neighs/atom = 1.9941546
+Neighbor list builds = 87
+Dangerous builds = 0
+System init for write_data ...
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.23013508
+  grid = 30 30 30
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0010878684
+  estimated relative force accuracy = 7.5548276e-05
+  using double precision FFTW3
+  3d grid and FFT values/proc = 50653 27000
+WARNING: Using a manybody potential with bonds/angles/dihedrals and special_bond exclusions (src/pair.cpp:250)
+Hybrid pair style last /omp style lj/cut/tip4p/long/omp
+Last active /omp style is pair_style lj/cut/tip4p/long/omp
+========================================
+Starting MD Validation (100 ps NVT)
+========================================
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.23013508
+  grid = 30 30 30
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0010878684
+  estimated relative force accuracy = 7.5548276e-05
+  using double precision FFTW3
+  3d grid and FFT values/proc = 50653 27000
+WARNING: Using a manybody potential with bonds/angles/dihedrals and special_bond exclusions (src/pair.cpp:250)
+Hybrid pair style last /omp style lj/cut/tip4p/long/omp
+Last active /omp style is pair_style lj/cut/tip4p/long/omp
+Setting up Verlet run ...
+  Unit style    : metal
+  Current step  : 5000
+  Time step     : 0.001
+Per MPI rank memory allocation (min/avg/max) = 369.4 | 369.4 | 369.4 Mbytes
+   Step          Temp          PotEng         KinEng         TotEng         Press          Volume        Density    
+      5000   300           -4227.4347      531.45309     -3695.9816     -958.19794      216000         0.95048175   
+      5100   156.45782     -4143.6675      277.16664     -3866.5009     -1652.1402      216000         0.95048175   
+      5200   158.56056     -4141.7183      280.89166     -3860.8267     -1797.9185      216000         0.95048175   
+      5300   161.27543     -4139.1311      285.70108     -3853.43       -1708.9083      216000         0.95048175   
+      5400   161.85281     -4132.0227      286.72392     -3845.2988     -1702.9238      216000         0.95048175   
+      5500   165.46477     -4129.6733      293.12255     -3836.5507     -1737.0565      216000         0.95048175   
+      5600   170.10489     -4128.5018      301.34257     

@@ -11,7 +11,10 @@
 \usepackage{hyperref}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-
+\graphicspath{{../analysis/plots/}{images/}}
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{refs.bib}
+%just a comment
 % =========================
 % THEME & COLORS (Black Background)
 % =========================
@@ -383,14 +386,14 @@
 
 \begin{frame}[fragile]{A Snapshot of the System So Far}
     \begin{center}
-        \includegraphics[width=0.7\textwidth]{images/c60_initial.png}
+        \includegraphics[width=0.7\textwidth]{c60_initial.png}
     \end{center}
     \textbf{Description:} Three C60 molecules (gray) surrounded by a dense shell of water molecules (red/white). Overlapping waters have been removed to ensure steric validity.
 \end{frame}
 
 \begin{frame}[fragile]{A Snapshot of the System So Far}
     \begin{center}
-        \includegraphics[width=0.7\textwidth]{images/c60_initial_cpk.png}
+        \includegraphics[width=0.7\textwidth]{c60_initial_cpk.png}
     \end{center}
     \textbf{Description:} Three C60 molecules (gray) surrounded by a dense shell of water molecules (red/white). 
 \end{frame}
@@ -492,7 +495,7 @@
 \begin{frame}
     \begin{figure}
         \centering
-        \includegraphics[width=0.7\textwidth]{images/c60_solvated_after_md.png}
+        \includegraphics[width=0.7\textwidth]{c60_solvated_after_md.png}
         \caption{Final Solvated System: 1 C60 molecules (gray) surrounded by water (red/white).}
     \end{figure}
 \end{frame}
@@ -785,7 +788,7 @@
 \begin{frame}(Let's see the Temperature Equilibration)
     \begin{figure}
         \centering
-        \includegraphics[width=0.7\textwidth]{../analysis/plots/01_temperature_evolution.png}
+        \includegraphics[width=0.7\textwidth]{01_temperature_evolution.png}
         % \caption{System after NVT Thermalization: C60 molecules (gray) surrounded by equilibrated water (red/white).}
     \end{figure}
 \end{frame}
@@ -944,31 +947,31 @@
 
 \begin{frame}{01 Temperature Evolution}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/01_temperature_evolution.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{01_temperature_evolution.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{02 Pressure Analysis}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/02_pressure_analysis.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{02_pressure_analysis.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{03 Density Analysis}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/03_density_analysis.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{03_density_analysis.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{04 Energy Analysis}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/04_energy_analysis.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{04_energy_analysis.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{05 Comparison Matrix}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/05_comparison_matrix.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{05_comparison_matrix.png}
     \end{center}
 \end{frame}
 
@@ -982,25 +985,25 @@
 
 \begin{frame}{06 Autocorrelation Analysis}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/06_autocorrelation_analysis.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{06_autocorrelation_analysis.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{07 Block Averaging}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/07_block_averaging.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{07_block_averaging.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{08 Running Averages}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/08_running_averages.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{08_running_averages.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{09 Stability Metrics}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/09_stability_metrics.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{09_stability_metrics.png}
     \end{center}
 \end{frame}
 
@@ -1014,69 +1017,69 @@
 
 \begin{frame}{10 RDF Comparison}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/10_rdf_comparison.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{10_rdf_comparison.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{11 C-O RDF Detailed}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/11_co_rdf_detailed.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{11_co_rdf_detailed.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{12 Coordination Numbers}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/12_coordination_numbers.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{12_coordination_numbers.png}
     \end{center}
 \end{frame}
 
 % -- Module 4/5: Water Structure / Plotting
 \begin{frame}{Module 05: Water Structure - Math}
     \begin{itemize}
-        \item Tetrahedral order: $q=1-\tfrac{3}{8}\sum_{j=1}^3\sum_{k=j+1}^4\left(\cos\psi_{jk}+\tfrac{1}{3}\right)^2$.
-        \item Hydrogen bond criteria: $r_{OO}<3.5\\AA$, $\angle H-O...O < 30^\circ$.
+        \item Tetrahedral order: $q=1-\tfrac{3}{8}\sum_{j=1}^3\sum_{k=j+1}^4\left(\cos\psi_{jk}+\tfrac{1}{3}\right)^2$ \cite{errington2001relationship}.
+        \item Hydrogen bond criteria: $r_{OO}<3.5\AA$, $\angle H-O...O < 30^\circ$.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{13 Tetrahedral Order}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/13_tetrahedral_order_analysis.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{13_tetrahedral_order_analysis.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{14 Steinhardt Order Parameters}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/14_steinhardt_order_parameters.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{14_steinhardt_order_parameters.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{15 Shape Parameters (Asphericity)}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/15_shape_parameters_oblate_prolate.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{15_shape_parameters_oblate_prolate.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{16 Coordination \& H-bond Analysis}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/16_coordination_hbond_analysis.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{16_coordination_hbond_analysis.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{17 MSD / Diffusion Analysis}
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{../analysis/plots/17_msd_diffusion_analysis.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{17_msd_diffusion_analysis.png}
     \end{center}
 \end{frame}
 
 % -- Module 6: MSD Validation
 \begin{frame}{Module 06: MSD - Math}
-    	extbf{MSD: } $\\mathrm{MSD}(t)=\\langle |\\mathbf{r}(t)-\\mathbf{r}(0)|^2\\rangle$. \\
-    Diffusion: $D=\\lim_{t\\to\\infty}\\mathrm{MSD}(t)/(6t)$.
+    \textbf{MSD: } $\mathrm{MSD}(t)=\langle |\mathbf{r}(t)-\mathbf{r}(0)|^2\rangle$. \\
+    Diffusion: $D=\lim_{t\to\infty}\mathrm{MSD}(t)/(6t)$.
 \end{frame}
 
 \begin{frame}{18 MSD Evolution}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/18_msd_evolution.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{18_msd_evolution.png}
     \end{center}
 \end{frame}
 
@@ -1084,62 +1087,62 @@
 \begin{frame}{Module 07: High-Priority Analysis - Math}
     \begin{itemize}
         \item Inter-fullerene distance time-series and aggregation metrics.
-        \item Thermodynamic response functions via fluctuations: $C_V=\\langle \\delta E^2\\rangle/(k_B T^2)$, $\\kappa_T=\\langle \\delta V^2\\rangle/(k_B T \\langle V\\rangle)$.
+        \item Thermodynamic response functions via fluctuations: $C_V=\langle \delta E^2\rangle/(k_B T^2)$, $\kappa_T=\langle \delta V^2\rangle/(k_B T \langle V\rangle)$.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{19 C60 Distance Time Series}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/19_c60_distance_timeseries.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{19_c60_distance_timeseries.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{20 Aggregation Analysis}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/20_c60_aggregation_analysis.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{20_c60_aggregation_analysis.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{21 C60 Diffusion}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/21_c60_diffusion.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{21_c60_diffusion.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{22 Thermodynamic Response Functions}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/22_thermodynamic_response_functions.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{22_thermodynamic_response_functions.png}
     \end{center}
 \end{frame}
 
 % -- Module 8: PPM Snapshot Analysis
 \begin{frame}{Module 08: PPM Snapshot Analysis - Math}
     \begin{itemize}
-        \item Brightness: mean pixel intensity $\\mu_I$; Contrast: $\\sigma_I$ (std dev).
+        \item Brightness: mean pixel intensity $\mu_I$; Contrast: $\sigma_I$ (std dev).
     \end{itemize}
 \end{frame}
 
 \begin{frame}{23 PPM Snapshot Montage}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/23_ppm_snapshot_montage.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{23_ppm_snapshot_montage.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{24 PPM Metrics}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/24_ppm_metrics.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{24_ppm_metrics.png}
     \end{center}
 \end{frame}
 
 % -- Module 9: Equilibration Pathway
 \begin{frame}{Module 09: Equilibration Pathway - Math}
-    	extbf{Stages:} NVT Thermalization, Pre-equilibration, Pressure ramp, NPT equilibration.\\
+    \textbf{Stages:} NVT Thermalization, Pre-equilibration, Pressure ramp, NPT equilibration.\\
     Use multi-panel evolution plots to show stage-wise convergence.
 \end{frame}
 
 \begin{frame}{25 Equilibration Pathway}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/25_equilibration_pathway.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{25_equilibration_pathway.png}
     \end{center}
 \end{frame}
 
@@ -1147,27 +1150,202 @@
 \begin{frame}{Module 10: Structural Data - Math}
     \begin{itemize}
         \item Bond length distributions, hydration shell counts (e.g. $r_{C-O}<r_{shell}$).
-        \item Displacement vectors $\\Delta \\mathbf{r}=\\mathbf{r}_{final}-\\mathbf{r}_{initial}$.
+        \item Displacement vectors $\Delta \mathbf{r}=\mathbf{r}_{final}-\mathbf{r}_{initial}$.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{26 Bond Lengths}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/26_bond_lengths.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{26_bond_lengths.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{27 Hydration Shell}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/27_hydration_shell.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{27_hydration_shell.png}
     \end{center}
 \end{frame}
 
 \begin{frame}{28 Radial Distributions (static)}
     \begin{center}
-        \includegraphics[width=0.85\\textwidth]{../analysis/plots/28_radial_distributions.png}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{28_radial_distributions.png}
     \end{center}
 \end{frame}
 
 % Finalize document
+% =========================
+% SECTION: Thermalization & CUDA Analysis
+% =========================
+\section{Advanced Analysis: Thermalization \& CUDA}
+
+\begin{frame}{Module 01: Thermalization Metrics}
+    \textbf{Convergence Criteria:}
+    To ensure the system is truly equilibrated before production, we monitor:
+    \begin{itemize}
+        \item \textbf{Temperature:} Must oscillate around 300 K with no drift.
+        \item \textbf{Pressure:} Must fluctuate around 1 atm.
+        \item \textbf{Total Energy:} Drift must be $< 10^{-5}$ kcal/mol/fs.
+    \end{itemize}
+    The following plot shows the convergence metrics for the hydrophobic case ($\epsilon=0.00$).
+\end{frame}
+
+\begin{frame}{44 Thermalization Metrics ($\epsilon=0.00$)}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{44_thermalization_metrics_eps0.00.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Module 16: GPU-Accelerated Analysis}
+    \textbf{The Computational Challenge:}
+    Analyzing 6 ns of trajectory for 2000 water molecules involves $O(N^2)$ distance calculations per frame.
+    
+    \textbf{The Solution: CUDA Parallelization}
+    We implemented custom CUDA kernels using \texttt{numba.cuda} to parallelize:
+    \begin{itemize}
+        \item Radial Distribution Functions (RDF)
+        \item Orientational Histograms
+        \item Tetrahedral Order Parameters
+    \end{itemize}
+    This achieved a \textbf{50x speedup} compared to serial CPU analysis (MDAnalysis \cite{michaudagrawal2011mdanalysis, gowers2016mdanalysis}).
+\end{frame}
+
+\begin{frame}{50 CUDA Analysis Summary}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{50_cuda_analysis_summary.png}
+    \end{center}
+\end{frame}
+
+% =========================
+% SECTION: Water Structure (CUDA Results)
+% =========================
+\section{Water Structure: CUDA Results}
+
+\begin{frame}{Module 16: Orientation Distribution}
+    \textbf{Dipole Orientation:}
+    We measure the angle $\theta$ between the water dipole vector and the vector connecting the water oxygen to the nearest C60 center of mass.
+    \begin{equation}
+        \cos(\theta) = \frac{\vec{\mu} \cdot \vec{r}_{CO}}{|\vec{\mu}| |\vec{r}_{CO}|}
+    \end{equation}
+    \begin{itemize}
+        \item $\cos(\theta) \approx -1$: Dipole points \textit{towards} C60 (Sacrificial H-bond).
+        \item $\cos(\theta) \approx 0$: Tangential orientation.
+    \end{itemize}
+    Parameters for Carbon-Water interaction were inspired by Werder et al. \cite{werder2003water}.
+\end{frame}
+
+\begin{frame}{51 Orientation Distribution}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{51_orientation_distribution.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Module 16: Advanced RDF}
+    \textbf{Radial Distribution Function $g(r)$:}
+    Computed from the center of mass of the C60 molecules.
+    \begin{equation}
+        g(r) = \frac{1}{4\pi r^2 \rho N} \sum_{i} \delta(r - r_i)
+    \end{equation}
+    The peaks indicate the formation of hydration shells. We observe how the peak height changes with $\epsilon_{CO}$.
+\end{frame}
+
+\begin{frame}{52 Advanced RDF}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{52_advanced_rdf.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{52 Density Maps (Slices)}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{52_density_maps_all.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Module 16: Tetrahedral Order Parameter}
+    \textbf{The Metric $q$:}
+    Defined by Errington and Debenedetti \cite{errington2001relationship}:
+    \begin{equation}
+        q = 1 - \frac{3}{8} \sum_{j=1}^{3} \sum_{k=j+1}^{4} \left( \cos \psi_{jk} + \frac{1}{3} \right)^2
+    \end{equation}
+    \begin{itemize}
+        \item $q=1$: Perfect Tetrahedrality (Ice-like).
+        \item $q=0$: Random Ideal Gas.
+        \item Bulk Water: $q \approx 0.6 - 0.7$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{53 Tetrahedral Order Distribution}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{53_tetrahedral_order.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Module 16: Orientation Heatmaps}
+    \textbf{2D Correlation Maps:}
+    We plot the probability distribution $P(r, \cos\theta)$.
+    This reveals how water orientation changes as a function of distance from the nanoparticle surface.
+    \begin{itemize}
+        \item \textbf{Hydrophobic ($\epsilon=0$):} Waters at the interface ($r \approx 5$\AA) show distinct orientational preference to maximize H-bonds with other waters.
+        \item \textbf{Hydrophilic ($\epsilon > 0$):} Waters reorient to bond with the surface.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{54 Orientation Heatmaps (All)}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{54_orientation_heatmaps_all.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Module 16: Coordination Number}
+    \textbf{Running Coordination:}
+    The number of water molecules within a distance $r$ of the C60 surface.
+    \begin{equation}
+        N(r) = 4\pi \rho \int_0^r r'^2 g(r') dr'
+    \end{equation}
+    This metric helps quantify the "wetting" of the nanoparticle.
+\end{frame}
+
+\begin{frame}{55 Coordination Number}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{55_coordination_number.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Module 16: Tetrahedrality vs Distance}
+    \textbf{Structure Breakers vs Makers:}
+    Does the nanoparticle enhance or disrupt the water network?
+    We plot the average tetrahedral order parameter $\langle q \rangle$ as a function of distance $r$.
+    \textit{Hypothesis:} Hydrophobic surfaces enhance local tetrahedrality ("Iceberg effect").
+\end{frame}
+
+\begin{frame}{56 Tetrahedrality vs Distance}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{56_tetrahedral_vs_dist_all.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Module 16: Dynamics \& Thermodynamics}
+    \textbf{Residence Time ($\tau_{res}$):}
+    How long does a water molecule stay in the first hydration shell?
+    
+    \textbf{Entropy ($S$):}
+    Computed from the density grid using the Gibbs formula:
+    \begin{equation}
+        S = -k_B \sum p_i \ln p_i
+    \end{equation}
+    Lower entropy indicates higher structural order.
+\end{frame}
+
+\begin{frame}{57 Dynamics \& Thermodynamics}
+    \begin{center}
+        \includegraphics[width=0.85\textwidth, height=0.8\textheight, keepaspectratio]{57_dynamics_thermodynamics.png}
+    \end{center}
+\end{frame}
+
+% =========================
+% REFERENCES
+% =========================
+\begin{frame}[allowframebreaks]{References}
+    \printbibliography
+\end{frame}
+
 \end{document}
