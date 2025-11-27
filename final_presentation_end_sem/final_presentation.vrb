@@ -1,0 +1,31 @@
+\frametitle{Model Architecture: Decoders \& Output}
+\centering
+    \begin{algorithm}[H]
+        \caption*{End-to-End Pipeline Overview (Part 3)}
+        \begin{algorithmic}[1]
+            \algrestore{myalg}
+
+            % Decoder Networks
+            \State \textbf{Decoder Networks} (Inputs: $z_{\mathrm{det/vae}} \oplus e$)
+
+            \vspace{0.3em}
+            \State \hspace{1em} \textbf{Trajectory Decoder:}
+            \State \hspace{2em} $\rightarrow X \in \mathbb{R}^{5541 \times 3}$
+
+            \vspace{0.3em}
+            \State \hspace{1em} \textbf{Thermodynamics Decoder:}
+            \State \hspace{2em} $\rightarrow S \in \mathbb{R}^{L \times 4} \quad (T, P, \rho, PE)$
+
+            \vspace{0.3em}
+            \State \hspace{1em} \textbf{RDF Decoder:}
+            \State \hspace{2em} $\rightarrow [g_{CC}, g_{CO}, g_{OO}] \in \mathbb{R}^{200}$
+
+            \Statex \hrulefill
+
+            % Final Outputs
+            \State \textbf{Final Outputs}
+            \[
+                X \text{ (Coords)}, \quad S \text{ (Thermo)}, \quad g(r) \text{ (Structure)}
+            \]
+        \end{algorithmic}
+    \end{algorithm}
